@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 class HomePageActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var selectorFragment: Fragment
+    private var selectorFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,30 +23,32 @@ class HomePageActivity : AppCompatActivity() {
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener {
 
-            when(it.itemId){
-               R.id.home -> {
-                   selectorFragment = HomeFragment()
-               }
-               R.id.search -> {
-                   selectorFragment = SearchFragment()
-               }
-               R.id.add -> {
-                   startActivity(Intent(this, PostActivity::class.java))
-               }
-               R.id.fav -> {
-                   selectorFragment = NotificationFragment()
-               }
-               R.id.person -> {
-                   selectorFragment = ProfileFragment()
-               }
+            when (it.itemId) {
+                R.id.home -> {
+                    selectorFragment = HomeFragment()
+                }
+                R.id.search -> {
+                    selectorFragment = SearchFragment()
+                }
+                R.id.add -> {
+                    startActivity(Intent(this, PostActivity::class.java))
+                }
+                R.id.fav -> {
+                    selectorFragment = NotificationFragment()
+                }
+                R.id.person -> {
+                    selectorFragment = ProfileFragment()
+                }
             }
-            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, selectorFragment).commit()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, selectorFragment!!).commit()
 
             return@setOnNavigationItemSelectedListener true
         }
 
         //For setting home fragment as default fragment.
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment())
+            .commit()
 
     }
 

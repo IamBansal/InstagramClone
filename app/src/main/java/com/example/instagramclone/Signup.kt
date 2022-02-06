@@ -115,6 +115,8 @@ class Signup : AppCompatActivity() {
                             map["Name"] = nameText
                             map["Username"] = usernameText
                             map["id"] = firebaseAuth?.currentUser!!.uid
+                            map["Bio"] = ""
+                            map["imageUrl"] = "default"
 
                             //Updating user's info to realtime database
                             FirebaseDatabase.getInstance().reference.child("Users")
