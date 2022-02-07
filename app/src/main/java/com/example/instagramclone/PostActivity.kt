@@ -10,8 +10,13 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import com.hendraanggrian.appcompat.socialview.Hashtag
+import com.hendraanggrian.appcompat.widget.HashtagArrayAdapter
 import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView
 import com.theartofdev.edmodo.cropper.CropImage
 import java.lang.Exception
@@ -50,6 +55,28 @@ class PostActivity : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        var hashTagAdapter = HashtagArrayAdapter<Hashtag>(this)
+        FirebaseDatabase.getInstance().reference.child("Hashtags").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                for (dataSnapshot in snapshot.children) {
+                    hashTagAdapter.add(Hashtag(dataSnapshot.key.toString(), dataSnapshot.childrenCount.toInt()))
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        description.hashtagAdapter = hashTagAdapter
+
+    }
+
     private fun upload() {
 
         val pd = ProgressDialog(this)
@@ -84,7 +111,7 @@ class PostActivity : AppCompatActivity() {
                             map.clear()
                             map["tag"] = tag.lowercase()
                             map["postId"] = postId.toString()
-                            hashTagRef.child(tag.lowercase()).setValue(map)
+                            hashTagRef.child(tag.lowercase()).child(postId!!).setValue(map)
                         }
                     }
                     pd.dismiss()
