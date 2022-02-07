@@ -1,12 +1,12 @@
 package com.example.instagramclone.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.loader.R
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -21,7 +21,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 class UserAdapter(private var context: Context, private var mUsers : ArrayList<User>, private var isFollowed : Boolean)
     : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
-    var firebaseUser : FirebaseUser? = null
+    private var firebaseUser : FirebaseUser? = null
 
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
 
@@ -44,6 +44,7 @@ class UserAdapter(private var context: Context, private var mUsers : ArrayList<U
         holder.username.text = user.Username
         holder.nameItem.text = user.Name
 
+        //To get image in profile.
         Picasso.get().load(user.imageUrl).placeholder(com.example.instagramclone.R.mipmap.ic_launcher).into(holder.imageProfile)
 
         isFollowed(user.id, holder.btnFollow)
@@ -53,13 +54,18 @@ class UserAdapter(private var context: Context, private var mUsers : ArrayList<U
         }
 
         holder.btnFollow.setOnClickListener {
+
+            //if button showed follow, then to add details to database.
             if (holder.btnFollow.text.toString() == "Follow") {
                 FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid)
                     .child("Following").child(user.id!!).setValue(true)
 
                 FirebaseDatabase.getInstance().reference.child("Follow").child(user.id!!)
                     .child("Followers").child(firebaseUser!!.uid).setValue(true)
-            } else {
+            }
+
+            //if button showed following, then to remove details from database.
+            else {
                 FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid)
                     .child("Following").child(user.id!!).removeValue()
 
@@ -70,13 +76,15 @@ class UserAdapter(private var context: Context, private var mUsers : ArrayList<U
 
     }
 
+    //for checking if current user is following a particular user or not.
     private fun isFollowed(id: String?, btnFollow: Button) {
 
         val ref = FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid).child("Following")
         ref.addValueEventListener(object : ValueEventListener{
+            @SuppressLint("SetTextI18n")
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                if (snapshot.exists()) {
+                if (snapshot.child(id!!).exists()) {
                     btnFollow.text = "Following"
                 } else {
                     btnFollow.text = "Follow"

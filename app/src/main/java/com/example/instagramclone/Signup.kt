@@ -43,6 +43,10 @@ class Signup : AppCompatActivity() {
             signupUser()
         }
 
+        loginText?.setOnClickListener {
+            startActivity(Intent(this, Login::class.java))
+        }
+
     }
 
     //for password regex.

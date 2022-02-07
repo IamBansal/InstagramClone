@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import android.widget.Toast
-import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,10 +18,7 @@ import com.hendraanggrian.appcompat.socialview.Hashtag
 import com.hendraanggrian.appcompat.widget.HashtagArrayAdapter
 import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView
 import com.theartofdev.edmodo.cropper.CropImage
-import java.lang.Exception
-import java.util.*
 import kotlin.collections.HashMap
-import kotlin.coroutines.Continuation
 
 class PostActivity : AppCompatActivity() {
 
@@ -55,28 +51,24 @@ class PostActivity : AppCompatActivity() {
 
     }
 
+    //For getting hashtags suggestions when adding the description for the post.
     override fun onStart() {
         super.onStart()
-        var hashTagAdapter = HashtagArrayAdapter<Hashtag>(this)
+        val hashTagAdapter = HashtagArrayAdapter<Hashtag>(this)
         FirebaseDatabase.getInstance().reference.child("Hashtags").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-
                 for (dataSnapshot in snapshot.children) {
                     hashTagAdapter.add(Hashtag(dataSnapshot.key.toString(), dataSnapshot.childrenCount.toInt()))
                 }
-
             }
-
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
-
         })
-
         description.hashtagAdapter = hashTagAdapter
-
     }
 
+    //For uploading the post.
     private fun upload() {
 
         val pd = ProgressDialog(this)
@@ -104,6 +96,7 @@ class PostActivity : AppCompatActivity() {
 
                     ref.child(postId.toString()).setValue(map)
 
+                    //This is for adding hashtags to another child in database.
                     val hashTagRef = FirebaseDatabase.getInstance().reference.child("Hashtags")
                     val hashtags: List<String> = description.hashtags
                     if (hashtags.isNotEmpty()) {
@@ -128,11 +121,13 @@ class PostActivity : AppCompatActivity() {
 
     }
 
+    //To get the file extension which is used in image's name.
     private fun getFileExtension(uri: Uri): String? {
         return MimeTypeMap.getSingleton()
             .getExtensionFromMimeType(this.contentResolver.getType(uri))
     }
 
+    //To select and get the image in post.
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

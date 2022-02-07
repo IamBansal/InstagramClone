@@ -1,5 +1,6 @@
 package com.example.instagramclone.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ class TagAdapter(private var context: Context, private var mTags : ArrayList<Str
 
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.tag.text = "#${mTags[position]}"
@@ -34,9 +36,14 @@ class TagAdapter(private var context: Context, private var mTags : ArrayList<Str
         return mTags.size
     }
 
+    //For getting hashtags on searching.
+    @SuppressLint("NotifyDataSetChanged")
     fun filter(filterTags : ArrayList<String>, filterTagsCount : ArrayList<String>) {
         this.mTags = filterTags
         this.mTagsCount = filterTagsCount
+
+        notifyDataSetChanged()
+
     }
 
 }

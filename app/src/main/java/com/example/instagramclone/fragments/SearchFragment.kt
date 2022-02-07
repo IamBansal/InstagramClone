@@ -1,5 +1,6 @@
 package com.example.instagramclone.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
@@ -19,6 +20,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView
+import java.util.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,21 +61,21 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
 
         val layout = inflater.inflate(R.layout.fragment_search, container, false)
+
+        //For users list.
         recyclerView = layout.findViewById(R.id.recyclerViewUsers)
         recyclerView!!.setHasFixedSize(true)
         recyclerView!!.layoutManager = LinearLayoutManager(activity)
-
         mUsers = ArrayList()
         userAdapter = UserAdapter(requireContext(), mUsers!!, true)
         recyclerView!!.adapter = userAdapter
 
+        //For tags and count list
         recyclerViewTags = layout.findViewById(R.id.recyclerViewTags)
         recyclerViewTags!!.setHasFixedSize(true)
         recyclerViewTags!!.layoutManager = LinearLayoutManager(activity)
-
         mHashTags = ArrayList()
         mHashTagsCount = ArrayList()
         tagAdapter = TagAdapter(requireContext(), mHashTags!!, mHashTagsCount!!)
@@ -82,6 +85,7 @@ class SearchFragment : Fragment() {
         readUsers()
         readTags()
 
+        //For search bar activity.
         searchBar?.addTextChangedListener(object :TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 //                TODO("Not yet implemented")
@@ -100,8 +104,10 @@ class SearchFragment : Fragment() {
         return layout
     }
 
+    //for reading the tags.
     private fun readTags() {
         FirebaseDatabase.getInstance().reference.child("Hashtags").addValueEventListener(object :ValueEventListener{
+            @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
                 mHashTagsCount?.clear()
                 mHashTags?.clear()
@@ -125,6 +131,7 @@ class SearchFragment : Fragment() {
         val query = FirebaseDatabase.getInstance().reference.child("Users").
                 orderByChild("Username").startAt(s).endAt(s + "\uf8ff")
         query.addValueEventListener(object :ValueEventListener{
+            @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
                 mUsers!!.clear()
                 for (dataSnapshot in snapshot.children) {
@@ -147,6 +154,7 @@ class SearchFragment : Fragment() {
 
         val ref = FirebaseDatabase.getInstance().reference.child("Users")
         ref.addValueEventListener(object : ValueEventListener{
+            @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 if (TextUtils.isEmpty(searchBar?.text.toString())) {
@@ -168,12 +176,13 @@ class SearchFragment : Fragment() {
 
     }
 
+    //for getting the hashtags on searching.
     private fun filter(text : String) {
         val mSearchTags = ArrayList<String>()
         val mSearchTagsCount = ArrayList<String>()
 
         for (s in mHashTags!!){
-            if (s.toLowerCase().contains(text.toLowerCase())){
+            if (s.lowercase(Locale.getDefault()).contains(text.lowercase(Locale.getDefault()))){
                 mSearchTags.add(s)
                 mSearchTagsCount.add(mHashTagsCount!![mHashTags!!.indexOf(s)])
             }
