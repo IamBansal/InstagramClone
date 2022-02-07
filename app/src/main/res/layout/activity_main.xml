@@ -7,7 +7,7 @@
 
     <ImageView
         android:id="@+id/ivLogo"
-        android:src="@drawable/logoo"
+        android:src="@drawable/log"
         android:layout_centerInParent="true"
         android:background="@color/white"
         android:visibility="invisible"

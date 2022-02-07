@@ -5,7 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.R
+import com.example.instagramclone.adapter.PostAdapter
+import com.example.instagramclone.model.Post
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,12 +39,72 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private var recyclerViewPosts : RecyclerView? = null
+    private var postsList : ArrayList<Post>? = null
+    private var followingList : ArrayList<String>? = null
+    private var postAdapter : PostAdapter? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+
+        val layout = inflater.inflate(R.layout.fragment_home, container, false)
+        recyclerViewPosts = layout.findViewById(R.id.recyclerViewPosts)
+        recyclerViewPosts?.setHasFixedSize(true)
+        val llLayout = LinearLayoutManager(requireContext())
+        llLayout.stackFromEnd
+        llLayout.reverseLayout
+        recyclerViewPosts?.layoutManager = llLayout
+
+        postsList = ArrayList()
+        followingList = ArrayList()
+        postAdapter = PostAdapter(requireContext(), postsList!!)
+        recyclerViewPosts?.adapter = postAdapter
+
+        checkFollowingUsers()
+
+        return layout
+    }
+
+    private fun checkFollowingUsers() {
+        FirebaseDatabase.getInstance().reference.child("Follow").child(FirebaseAuth.getInstance().currentUser!!.uid)
+            .child("Following").addValueEventListener(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    followingList?.clear()
+                    //This next line for showing own posts
+                    followingList?.add(FirebaseAuth.getInstance().currentUser!!.uid)
+                    for (dataSnapshot in snapshot.children){
+                        followingList?.add(dataSnapshot.key.toString())
+                    }
+                    readPost()
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+    }
+
+    private fun readPost() {
+        FirebaseDatabase.getInstance().reference.child("Posts").addValueEventListener(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                postsList?.clear()
+                for (dataSnapshot in snapshot.children){
+                    val post : Post? = dataSnapshot.getValue(Post::class.java)
+                    for (id in followingList!!){
+                        if (post?.publisher.equals(id)){
+                            postsList?.add(post!!)
+                        }
+                    }
+                }
+                postAdapter?.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     companion object {

@@ -8,7 +8,7 @@
         android:id="@+id/image_profile"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@drawable/ic_baseline_person_24" />
 
     <LinearLayout
         android:layout_toEndOf="@id/image_profile"
@@ -43,6 +43,7 @@
         android:textAllCaps="false"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:backgroundTint="@color/white"
         android:textColor="@color/black"
         android:visibility="gone"
         android:layout_width="wrap_content"
