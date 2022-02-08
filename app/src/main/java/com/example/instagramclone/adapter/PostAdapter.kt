@@ -70,13 +70,63 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }
-
             })
 
+        isLiked(post.postId.toString(), holder.like)
+        noOfLikes(post.postId.toString(), holder.noOfLikes)
+
+        holder.like.setOnClickListener {
+            if (holder.like.tag.equals("Like")) {
+                FirebaseDatabase.getInstance().reference.child("Likes")
+                    .child(post.postId.toString()).child(firebaseUser!!.uid).setValue(true)
+            } else {
+                FirebaseDatabase.getInstance().reference.child("Likes")
+                    .child(post.postId.toString()).child(firebaseUser!!.uid).removeValue()
+            }
+        }
+
+    }
+
+    //for checking if post is liked or not by the user.
+    private fun isLiked(postId: String, image: ImageView) {
+        FirebaseDatabase.getInstance().reference.child("Likes").child(postId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    if (snapshot.child(firebaseUser!!.uid).exists()) {
+                        image.setImageResource(R.drawable.ic_liked)
+                        image.tag = "Liked"
+                    } else {
+                        image.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+                        image.tag = "Like"
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+    }
+
+    //For displaying number of likes of post.
+    private fun noOfLikes(postId: String, text: TextView) {
+        FirebaseDatabase.getInstance().reference.child("Likes").child(postId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    text.text = "${snapshot.childrenCount} likes"
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
     }
 
     override fun getItemCount(): Int {
         return mPosts.size
     }
+
 
 }

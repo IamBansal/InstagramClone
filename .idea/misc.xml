@@ -4,6 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramClone/app/src/main/res/drawable/button_background.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramClone/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramClone/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramClone/app/src/main/res/drawable/ic_liked.xml" value="0.2484375" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramClone/app/src/main/res/layout-w936dp/activity_login.xml" value="0.17421875" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramClone/app/src/main/res/layout/activity_home_page.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramClone/app/src/main/res/layout/activity_login.xml" value="0.23229166666666667" />
