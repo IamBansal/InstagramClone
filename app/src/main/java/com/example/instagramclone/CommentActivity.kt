@@ -1,15 +1,16 @@
 package com.example.instagramclone
 
 import android.app.ProgressDialog
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.instagramclone.adapter.CommentAdapter
+import com.example.instagramclone.model.Comment
 import com.example.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -19,18 +20,18 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import java.util.*
-import kotlin.collections.HashMap
 
 class CommentActivity : AppCompatActivity() {
 
-    private var addComment : EditText? = null
-    private var postComment : TextView? = null
-    private var profileComment : CircleImageView? = null
-    private var recyclerViewComments : RecyclerView? = null
-    private var postId : String? = null
-    private var author : String? = null
-    private var firebaseUser : FirebaseUser? = null
+    private var addComment: EditText? = null
+    private var postComment: TextView? = null
+    private var profileComment: CircleImageView? = null
+    private var recyclerViewComments: RecyclerView? = null
+    private var commentAdapter: CommentAdapter? = null
+    private var commentList: ArrayList<Comment>? = null
+    private var postId: String? = null
+    private var author: String? = null
+    private var firebaseUser: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +50,12 @@ class CommentActivity : AppCompatActivity() {
         profileComment = findViewById(R.id.profileComment)
         recyclerViewComments = findViewById(R.id.recyclerViewComments)
         firebaseUser = FirebaseAuth.getInstance().currentUser
+        commentList = ArrayList()
+        commentAdapter = CommentAdapter(this, commentList!!)
+
+        recyclerViewComments?.setHasFixedSize(true)
+        recyclerViewComments?.layoutManager = LinearLayoutManager(this)
+        recyclerViewComments?.adapter = commentAdapter
 
         val intent = intent
         postId = intent.getStringExtra("postId")
@@ -63,6 +70,30 @@ class CommentActivity : AppCompatActivity() {
                 putComment()
             }
         }
+
+        getComment()
+
+    }
+
+    //Tpo get the comment of the posts.
+    private fun getComment() {
+
+        FirebaseDatabase.getInstance().reference.child("Comments").child(postId.toString())
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    commentList?.clear()
+                    for (dataSnapshot in snapshot.children) {
+                        val comment = dataSnapshot.getValue(Comment::class.java)
+                        commentList?.add(comment!!)
+                    }
+                    commentAdapter?.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
 
     }
 
@@ -91,21 +122,22 @@ class CommentActivity : AppCompatActivity() {
 
     private fun getUserImage() {
 
-        FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid).addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val user = snapshot.getValue(User::class.java)
-                if (user?.imageUrl.equals("default")){
-                    profileComment?.setImageResource(R.drawable.ic_baseline_person_24)
-                } else {
-                    Picasso.get().load(user?.imageUrl).into(profileComment)
+        FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(User::class.java)
+                    if (user?.imageUrl.equals("default")) {
+                        profileComment?.setImageResource(R.drawable.ic_baseline_person_24)
+                    } else {
+                        Picasso.get().load(user?.imageUrl).into(profileComment)
+                    }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-        })
+            })
 
     }
 }

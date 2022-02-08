@@ -76,7 +76,7 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
 
         isLiked(post.postId.toString(), holder.like)
         noOfLikes(post.postId.toString(), holder.noOfLikes)
-        getComments(post.postId.toString(), holder.noOfComments)
+        getNumberOfComments(post.postId.toString(), holder.noOfComments)
 
         holder.like.setOnClickListener {
             if (holder.like.tag.equals("Like")) {
@@ -103,8 +103,8 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
         }
     }
 
-    //To get the comments.
-    private fun getComments(postId: String, text: TextView) {
+    //To get the number of comments.
+    private fun getNumberOfComments(postId: String, text: TextView) {
         FirebaseDatabase.getInstance().reference.child("Comments").child(postId)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
