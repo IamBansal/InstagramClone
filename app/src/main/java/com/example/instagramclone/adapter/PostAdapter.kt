@@ -1,12 +1,14 @@
 package com.example.instagramclone.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.instagramclone.CommentActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.model.Post
 import com.example.instagramclone.model.User
@@ -74,6 +76,7 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
 
         isLiked(post.postId.toString(), holder.like)
         noOfLikes(post.postId.toString(), holder.noOfLikes)
+        getComments(post.postId.toString(), holder.noOfComments)
 
         holder.like.setOnClickListener {
             if (holder.like.tag.equals("Like")) {
@@ -85,6 +88,34 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
             }
         }
 
+        holder.comment.setOnClickListener {
+            val intent = Intent(context, CommentActivity::class.java)
+            intent.putExtra("postId", post.postId)
+            intent.putExtra("authorId", post.publisher)
+            context.startActivity(intent)
+        }
+
+        holder.noOfComments.setOnClickListener {
+            val intent = Intent(context, CommentActivity::class.java)
+            intent.putExtra("postId", post.postId)
+            intent.putExtra("authorId", post.publisher)
+            context.startActivity(intent)
+        }
+    }
+
+    //To get the comments.
+    private fun getComments(postId: String, text: TextView) {
+        FirebaseDatabase.getInstance().reference.child("Comments").child(postId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    text.text = "View all ${snapshot.childrenCount} comments"
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
     }
 
     //for checking if post is liked or not by the user.
