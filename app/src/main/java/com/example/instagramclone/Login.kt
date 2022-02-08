@@ -51,7 +51,7 @@ class Login : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        startActivity(Intent(this, MainActivity::class.java))
+        finishAffinity()
     }
 
     //To sign in the user.(Without verification for now.)

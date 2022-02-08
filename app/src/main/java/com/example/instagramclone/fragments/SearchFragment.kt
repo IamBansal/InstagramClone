@@ -46,16 +46,16 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private var recyclerView : RecyclerView? = null
-    private var mUsers : ArrayList<User>? = null
-    private var userAdapter : UserAdapter? = null
-    private var searchBar : SocialAutoCompleteTextView? = null
+    private var recyclerView: RecyclerView? = null
+    private var mUsers: ArrayList<User>? = null
+    private var userAdapter: UserAdapter? = null
+    private var searchBar: SocialAutoCompleteTextView? = null
 
 
-    private var recyclerViewTags : RecyclerView? = null
-    private var mHashTags : ArrayList<String>? = null
-    private var mHashTagsCount : ArrayList<String>? = null
-    private var tagAdapter : TagAdapter? = null
+    private var recyclerViewTags: RecyclerView? = null
+    private var mHashTags: ArrayList<String>? = null
+    private var mHashTagsCount: ArrayList<String>? = null
+    private var tagAdapter: TagAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -86,7 +86,7 @@ class SearchFragment : Fragment() {
         readTags()
 
         //For search bar activity.
-        searchBar?.addTextChangedListener(object :TextWatcher{
+        searchBar?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 //                TODO("Not yet implemented")
             }
@@ -106,31 +106,32 @@ class SearchFragment : Fragment() {
 
     //for reading the tags.
     private fun readTags() {
-        FirebaseDatabase.getInstance().reference.child("Hashtags").addValueEventListener(object :ValueEventListener{
-            @SuppressLint("NotifyDataSetChanged")
-            override fun onDataChange(snapshot: DataSnapshot) {
-                mHashTagsCount?.clear()
-                mHashTags?.clear()
-                for (dataSnapshot in snapshot.children) {
-                    mHashTags?.add(dataSnapshot.key.toString())
-                    mHashTagsCount?.add(dataSnapshot.childrenCount.toString())
+        FirebaseDatabase.getInstance().reference.child("Hashtags")
+            .addValueEventListener(object : ValueEventListener {
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    mHashTagsCount?.clear()
+                    mHashTags?.clear()
+                    for (dataSnapshot in snapshot.children) {
+                        mHashTags?.add(dataSnapshot.key.toString())
+                        mHashTagsCount?.add(dataSnapshot.childrenCount.toString())
+                    }
+                    tagAdapter?.notifyDataSetChanged()
                 }
-                tagAdapter?.notifyDataSetChanged()
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-        })
+            })
 
     }
 
     //For searching the user..
     private fun searchUser(s: String) {
-        val query = FirebaseDatabase.getInstance().reference.child("Users").
-                orderByChild("Username").startAt(s).endAt(s + "\uf8ff")
-        query.addValueEventListener(object :ValueEventListener{
+        val query = FirebaseDatabase.getInstance().reference.child("Users").orderByChild("Username")
+            .startAt(s).endAt(s + "\uf8ff")
+        query.addValueEventListener(object : ValueEventListener {
             @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
                 mUsers!!.clear()
@@ -153,7 +154,7 @@ class SearchFragment : Fragment() {
     private fun readUsers() {
 
         val ref = FirebaseDatabase.getInstance().reference.child("Users")
-        ref.addValueEventListener(object : ValueEventListener{
+        ref.addValueEventListener(object : ValueEventListener {
             @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -177,12 +178,12 @@ class SearchFragment : Fragment() {
     }
 
     //for getting the hashtags on searching.
-    private fun filter(text : String) {
+    private fun filter(text: String) {
         val mSearchTags = ArrayList<String>()
         val mSearchTagsCount = ArrayList<String>()
 
-        for (s in mHashTags!!){
-            if (s.lowercase(Locale.getDefault()).contains(text.lowercase(Locale.getDefault()))){
+        for (s in mHashTags!!) {
+            if (s.lowercase(Locale.getDefault()).contains(text.lowercase(Locale.getDefault()))) {
                 mSearchTags.add(s)
                 mSearchTagsCount.add(mHashTagsCount!![mHashTags!!.indexOf(s)])
             }

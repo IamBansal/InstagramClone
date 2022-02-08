@@ -18,34 +18,40 @@ import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
-class UserAdapter(private var context: Context, private var mUsers : ArrayList<User>, private var isFollowed : Boolean)
-    : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+class UserAdapter(
+    private var context: Context,
+    private var mUsers: ArrayList<User>,
+    private var isFollowed: Boolean
+) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
-    private var firebaseUser : FirebaseUser? = null
+    private var firebaseUser: FirebaseUser? = null
 
-    class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val imageProfile : CircleImageView = itemView.findViewById(com.example.instagramclone.R.id.image_profile)
-        val username : TextView = itemView.findViewById(com.example.instagramclone.R.id.usernameItem)
-        val nameItem : TextView = itemView.findViewById(com.example.instagramclone.R.id.nameItem)
-        val btnFollow : Button = itemView.findViewById(com.example.instagramclone.R.id.btnFollow)
+        val imageProfile: CircleImageView =
+            itemView.findViewById(com.example.instagramclone.R.id.image_profile)
+        val username: TextView = itemView.findViewById(com.example.instagramclone.R.id.usernameItem)
+        val nameItem: TextView = itemView.findViewById(com.example.instagramclone.R.id.nameItem)
+        val btnFollow: Button = itemView.findViewById(com.example.instagramclone.R.id.btnFollow)
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layout = LayoutInflater.from(context).inflate(com.example.instagramclone.R.layout.user_item, parent, false)
+        val layout = LayoutInflater.from(context)
+            .inflate(com.example.instagramclone.R.layout.user_item, parent, false)
         return ViewHolder(layout)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         firebaseUser = FirebaseAuth.getInstance().currentUser
-        val user : User = mUsers[position]
+        val user: User = mUsers[position]
         holder.btnFollow.visibility = View.VISIBLE
         holder.username.text = user.Username
         holder.nameItem.text = user.Name
 
         //To get image in profile.
-        Picasso.get().load(user.imageUrl).placeholder(com.example.instagramclone.R.mipmap.ic_launcher).into(holder.imageProfile)
+        Picasso.get().load(user.imageUrl)
+            .placeholder(com.example.instagramclone.R.mipmap.ic_launcher).into(holder.imageProfile)
 
         isFollowed(user.id, holder.btnFollow)
 
@@ -79,8 +85,9 @@ class UserAdapter(private var context: Context, private var mUsers : ArrayList<U
     //for checking if current user is following a particular user or not.
     private fun isFollowed(id: String?, btnFollow: Button) {
 
-        val ref = FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid).child("Following")
-        ref.addValueEventListener(object : ValueEventListener{
+        val ref = FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid)
+            .child("Following")
+        ref.addValueEventListener(object : ValueEventListener {
             @SuppressLint("SetTextI18n")
             override fun onDataChange(snapshot: DataSnapshot) {
 

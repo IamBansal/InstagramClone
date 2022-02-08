@@ -39,10 +39,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private var recyclerViewPosts : RecyclerView? = null
-    private var postsList : ArrayList<Post>? = null
-    private var followingList : ArrayList<String>? = null
-    private var postAdapter : PostAdapter? = null
+    private var recyclerViewPosts: RecyclerView? = null
+    private var postsList: ArrayList<Post>? = null
+    private var followingList: ArrayList<String>? = null
+    private var postAdapter: PostAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +53,8 @@ class HomeFragment : Fragment() {
         recyclerViewPosts = layout.findViewById(R.id.recyclerViewPosts)
         recyclerViewPosts?.setHasFixedSize(true)
         val llLayout = LinearLayoutManager(requireContext())
+
+        //To get the latest entry on top.
         llLayout.stackFromEnd
         llLayout.reverseLayout
         recyclerViewPosts?.layoutManager = llLayout
@@ -67,44 +69,49 @@ class HomeFragment : Fragment() {
         return layout
     }
 
+    //For checking those whom the current user is following.
     private fun checkFollowingUsers() {
-        FirebaseDatabase.getInstance().reference.child("Follow").child(FirebaseAuth.getInstance().currentUser!!.uid)
-            .child("Following").addValueEventListener(object :ValueEventListener{
+        FirebaseDatabase.getInstance().reference.child("Follow")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid)
+            .child("Following").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     followingList?.clear()
                     //This next line for showing own posts
                     followingList?.add(FirebaseAuth.getInstance().currentUser!!.uid)
-                    for (dataSnapshot in snapshot.children){
+                    for (dataSnapshot in snapshot.children) {
                         followingList?.add(dataSnapshot.key.toString())
                     }
                     readPost()
                 }
+
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }
             })
     }
 
+    //To read the posts.
     private fun readPost() {
-        FirebaseDatabase.getInstance().reference.child("Posts").addValueEventListener(object :ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                postsList?.clear()
-                for (dataSnapshot in snapshot.children){
-                    val post : Post? = dataSnapshot.getValue(Post::class.java)
-                    for (id in followingList!!){
-                        if (post?.publisher.equals(id)){
-                            postsList?.add(post!!)
+        FirebaseDatabase.getInstance().reference.child("Posts")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    postsList?.clear()
+                    for (dataSnapshot in snapshot.children) {
+                        val post: Post? = dataSnapshot.getValue(Post::class.java)
+                        for (id in followingList!!) {
+                            if (post?.publisher.equals(id)) {
+                                postsList?.add(post!!)
+                            }
                         }
                     }
+                    postAdapter?.notifyDataSetChanged()
                 }
-                postAdapter?.notifyDataSetChanged()
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-        })
+            })
     }
 
     companion object {

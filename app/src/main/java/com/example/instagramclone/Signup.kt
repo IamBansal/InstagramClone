@@ -74,7 +74,7 @@ class Signup : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, Login::class.java))
     }
 
     //To sign up the user (Without verification for now.)
