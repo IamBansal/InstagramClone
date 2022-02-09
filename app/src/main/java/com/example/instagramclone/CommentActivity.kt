@@ -45,21 +45,33 @@ class CommentActivity : AppCompatActivity() {
             finish()
         }
 
+        val intent = intent
+        postId = intent.getStringExtra("postId")
+        author = intent.getStringExtra("authorId")
+
+
         addComment = findViewById(R.id.AddComment)
         postComment = findViewById(R.id.PostComment)
         profileComment = findViewById(R.id.profileComment)
         recyclerViewComments = findViewById(R.id.recyclerViewComments)
         firebaseUser = FirebaseAuth.getInstance().currentUser
         commentList = ArrayList()
-        commentAdapter = CommentAdapter(this, commentList!!)
+        commentAdapter = CommentAdapter(this, commentList!!, postId.toString())
+
+        //For setting hint in editText as "comment as {username}"
+        FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid)
+            .child("Username").addValueEventListener(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    addComment?.hint = "Comment as ${snapshot.value.toString()}"
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
 
         recyclerViewComments?.setHasFixedSize(true)
         recyclerViewComments?.layoutManager = LinearLayoutManager(this)
         recyclerViewComments?.adapter = commentAdapter
-
-        val intent = intent
-        postId = intent.getStringExtra("postId")
-        author = intent.getStringExtra("authorId")
 
         getUserImage()
 
@@ -105,14 +117,19 @@ class CommentActivity : AppCompatActivity() {
         pd.show()
 
         val map = HashMap<String, String>()
+
+        val ref = FirebaseDatabase.getInstance().reference.child("Comments").child(postId.toString())
+        val id = ref.push().key
+
         map["Comment"] = addComment?.text.toString()
         map["publisher"] = firebaseUser!!.uid
+        map["id"] = id.toString()
 
-        FirebaseDatabase.getInstance().reference.child("Comments").child(postId.toString())
-            .push().setValue(map).addOnCompleteListener { task ->
+            ref.child(id.toString()).setValue(map).addOnCompleteListener { task ->
                 pd.dismiss()
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Comment Added.", Toast.LENGTH_SHORT).show()
+                    finish()
                 } else {
                     Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
                 }

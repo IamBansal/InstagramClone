@@ -1,10 +1,12 @@
 package com.example.instagramclone.adapter
 
+import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.R
 import com.example.instagramclone.model.Comment
@@ -18,7 +20,7 @@ import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
-class CommentAdapter(private var context: Context, private var mComments : ArrayList<Comment>) : RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
+class CommentAdapter(private var context: Context, private var mComments : ArrayList<Comment>, private var postId : String) : RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
 
     var firebaseUser : FirebaseUser? = null
 
@@ -54,8 +56,29 @@ class CommentAdapter(private var context: Context, private var mComments : Array
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
-
         })
+
+        holder.itemView.setOnLongClickListener{
+
+            if (comment.publisher!!.endsWith(firebaseUser!!.uid)){
+                val alertDialog = AlertDialog.Builder(context)
+                    .setTitle("Delete Comment!!")
+                    .setMessage("You want to delete it??")
+                    .setPositiveButton("Yes"){_,_,->
+                        FirebaseDatabase.getInstance().reference.child("Comments").child(postId)
+                            .child(comment.id.toString()).removeValue().addOnCompleteListener { task ->
+                            if (task.isSuccessful){
+                                Toast.makeText(context, "Comment deleted.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                    .setNegativeButton("No"){_,_-> }
+                    .create()
+                    .show()
+            }
+
+            return@setOnLongClickListener true
+        }
 
     }
 
