@@ -2,12 +2,14 @@ package com.example.instagramclone.adapter
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.instagramclone.HomePageActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.model.Comment
 import com.example.instagramclone.model.User
@@ -58,6 +60,7 @@ class CommentAdapter(private var context: Context, private var mComments : Array
             }
         })
 
+        //To delete the comment.
         holder.itemView.setOnLongClickListener{
 
             if (comment.publisher!!.endsWith(firebaseUser!!.uid)){
@@ -78,6 +81,18 @@ class CommentAdapter(private var context: Context, private var mComments : Array
             }
 
             return@setOnLongClickListener true
+        }
+
+        holder.commentText.setOnClickListener {
+            val intent = Intent(context, HomePageActivity::class.java)
+            intent.putExtra("publisherId", comment.publisher)
+            context.startActivity(intent)
+        }
+
+        holder.profileComment.setOnClickListener {
+            val intent = Intent(context, HomePageActivity::class.java)
+            intent.putExtra("publisherId", comment.publisher)
+            context.startActivity(intent)
         }
 
     }

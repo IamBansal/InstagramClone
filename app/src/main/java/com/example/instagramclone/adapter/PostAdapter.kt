@@ -77,7 +77,9 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
         isLiked(post.postId.toString(), holder.like)
         noOfLikes(post.postId.toString(), holder.noOfLikes)
         getNumberOfComments(post.postId.toString(), holder.noOfComments)
+        isSaved(post.postId.toString(), holder.save)
 
+        //To like or unlike a post.
         holder.like.setOnClickListener {
             if (holder.like.tag.equals("Like")) {
                 FirebaseDatabase.getInstance().reference.child("Likes")
@@ -101,6 +103,36 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
             intent.putExtra("authorId", post.publisher)
             context.startActivity(intent)
         }
+
+        //to save or un-save a post.
+        holder.save.setOnClickListener {
+            if (holder.save.tag == "Save"){
+                FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid).
+                    child(post.postId.toString()).setValue(true)
+            }else {
+                FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid).
+                child(post.postId.toString()).removeValue()
+            }
+        }
+
+    }
+
+    //To check if post is saved or not.
+    private fun isSaved(postID: String, save: ImageView) {
+        FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid).addValueEventListener(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.child(postID).exists()){
+                    save.setImageResource(R.drawable.ic_baseline_bookmark_24)
+                    save.tag = "Saved"
+                } else {
+                    save.setImageResource(R.drawable.ic_baseline_turned_in_not_24)
+                    save.tag = "Save"
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     //To get the number of comments.

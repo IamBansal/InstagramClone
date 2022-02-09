@@ -38,6 +38,7 @@ class HomePageActivity : AppCompatActivity() {
                 }
                 R.id.person -> {
                     selectorFragment = ProfileFragment()
+                    it.setIcon(R.drawable.ic_baseline_person_blacked)
                 }
             }
             supportFragmentManager.beginTransaction()
@@ -46,9 +47,17 @@ class HomePageActivity : AppCompatActivity() {
             return@setOnNavigationItemSelectedListener true
         }
 
-        //For setting home fragment as default fragment.
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment())
-            .commit()
+        val intent : Bundle? = intent.extras
+        if(intent != null) {
+            val profileID = intent.getString("publisherId")
+            getSharedPreferences("PROFILE", MODE_PRIVATE).edit().putString("profileID", profileID).apply()
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
+            bottomNavigationView.selectedItemId = R.id.person
+        } else {
+            //For setting home fragment as default fragment.
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()
+        }
+
 
     }
 
