@@ -68,6 +68,8 @@ class UserAdapter(
 
                 FirebaseDatabase.getInstance().reference.child("Follow").child(user.id!!)
                     .child("Followers").child(firebaseUser!!.uid).setValue(true)
+
+                addNotification(user.id.toString())
             }
 
             //if button showed following, then to remove details from database.
@@ -80,6 +82,16 @@ class UserAdapter(
             }
         }
 
+    }
+
+    //To add notification on following.
+    private fun addNotification(id: String) {
+        val map = HashMap<String, Any>()
+        map["isPost"] = false
+        map["postId"] = ""
+        map["text"] = "Started following you..."
+        map["userId"] = firebaseUser!!.uid
+        FirebaseDatabase.getInstance().reference.child("Notifications").child(id).push().setValue(map)
     }
 
     //for checking if current user is following a particular user or not.

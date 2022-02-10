@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.hendraanggrian.appcompat.widget.SocialTextView
 import com.squareup.picasso.Picasso
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class PostAdapter(private var context: Context, private var mPosts: ArrayList<Post>) :
     RecyclerView.Adapter<PostAdapter.ViewHolder>() {
@@ -86,6 +88,7 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
             if (holder.like.tag.equals("Like")) {
                 FirebaseDatabase.getInstance().reference.child("Likes")
                     .child(post.postId.toString()).child(firebaseUser!!.uid).setValue(true)
+                addNotification(post.postId.toString(), post.publisher.toString())
             } else {
                 FirebaseDatabase.getInstance().reference.child("Likes")
                     .child(post.postId.toString()).child(firebaseUser!!.uid).removeValue()
@@ -132,6 +135,16 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
             (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
         }
 
+    }
+
+    //To add notification on the liking post.
+    private fun addNotification(postId: String, publisher: String) {
+        val map = HashMap<String, Any>()
+        map["isPost"] = true
+        map["postId"] = postId
+        map["text"] = "Liked your post."
+        map["userId"] = publisher
+        FirebaseDatabase.getInstance().reference.child("Notifications").child(firebaseUser!!.uid).push().setValue(map)
     }
 
     //To check if post is saved or not.

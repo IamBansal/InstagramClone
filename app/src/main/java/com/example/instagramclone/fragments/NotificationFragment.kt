@@ -1,11 +1,21 @@
 package com.example.instagramclone.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.R
+import com.example.instagramclone.adapter.NotificationAdapter
+import com.example.instagramclone.model.Notification
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,12 +40,44 @@ class NotificationFragment : Fragment() {
         }
     }
 
+    private var recyclerViewNotification : RecyclerView? = null
+    private var adapterNotification : NotificationAdapter? = null
+    private var notificationList : ArrayList<Notification>? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification, container, false)
+        val layout =  inflater.inflate(R.layout.fragment_notification, container, false)
+
+        recyclerViewNotification = layout.findViewById(R.id.recyclerViewNotifications)
+        notificationList = ArrayList()
+        adapterNotification = NotificationAdapter(requireContext(), notificationList!!)
+        recyclerViewNotification?.setHasFixedSize(true)
+        recyclerViewNotification?.layoutManager = LinearLayoutManager(requireContext())
+        recyclerViewNotification?.adapter = adapterNotification
+
+        readNotification()
+
+        return layout
+    }
+
+    //To read the notifications user got.
+    private fun readNotification() {
+        FirebaseDatabase.getInstance().reference.child("Notifications").child(FirebaseAuth.getInstance().currentUser!!.uid)
+            .addValueEventListener(object :ValueEventListener{
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (dataSnaps in snapshot.children){
+                        notificationList?.add(dataSnaps.getValue(Notification::class.java)!!)
+                    }
+                    notificationList?.reverse()
+                    adapterNotification?.notifyDataSetChanged()
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+        })
     }
 
     companion object {
