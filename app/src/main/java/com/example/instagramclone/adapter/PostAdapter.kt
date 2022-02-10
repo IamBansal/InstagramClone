@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.CommentActivity
 import com.example.instagramclone.R
+import com.example.instagramclone.fragments.ProfileFragment
 import com.example.instagramclone.model.Post
 import com.example.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -113,6 +115,21 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
                 FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid).
                 child(post.postId.toString()).removeValue()
             }
+        }
+
+        holder.profilePost.setOnClickListener {
+            context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileID", post.publisher).apply()
+            (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
+        }
+
+        holder.usernamePost.setOnClickListener {
+            context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileID", post.publisher).apply()
+            (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
+        }
+
+        holder.author.setOnClickListener {
+            context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileID", post.publisher).apply()
+            (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
         }
 
     }
