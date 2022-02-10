@@ -1,6 +1,7 @@
 package com.example.instagramclone.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.instagramclone.EditProfileActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.adapter.PhotoAdapter
 import com.example.instagramclone.model.Post
@@ -149,7 +151,7 @@ class ProfileFragment : Fragment() {
         editProfile?.setOnClickListener {
             val btnText = editProfile?.text.toString()
             if (btnText == "Edit Profile"){
-                //have to do
+                startActivity(Intent(context, EditProfileActivity::class.java))
             } else {
                 //To follow if it shows follow.
                 if (btnText == "Follow"){

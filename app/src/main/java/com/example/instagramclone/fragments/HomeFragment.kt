@@ -55,8 +55,8 @@ class HomeFragment : Fragment() {
         val llLayout = LinearLayoutManager(requireContext())
 
         //To get the latest entry on top.
-        llLayout.stackFromEnd
-        llLayout.reverseLayout
+        llLayout.stackFromEnd = true
+        llLayout.reverseLayout = true
         recyclerViewPosts?.layoutManager = llLayout
 
         postsList = ArrayList()
