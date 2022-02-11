@@ -9,9 +9,19 @@
         android:id="@+id/logoSplash"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:visibility="gone"
         android:layout_marginTop="270dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/log" />
+
+    <ImageView
+        android:id="@+id/logoSplashDark"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="270dp"
+        android:src="@drawable/darkk" />
 
     <TextView
         android:id="@+id/fromSplash"

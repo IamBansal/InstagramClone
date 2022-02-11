@@ -26,6 +26,7 @@
             <com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
+                android:backgroundTint="@color/white"
                 android:layout_marginStart="10dp"
                 android:id="@+id/search_bar"
                 android:background="@color/white"

@@ -6,15 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".Login">
 
-    <ImageView
+    <TextView
         android:id="@+id/textS"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="40sp"
+        android:gravity="center"
+        android:fontFamily="@font/insta"
+        android:textColor="@color/black"
         android:layout_marginStart="40dp"
         android:layout_marginTop="120dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="40dp"
-        android:src="@drawable/text" />
+        android:text="Instagram" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passLayoutS"
@@ -66,12 +71,12 @@
         android:layout_below="@id/passLayoutS"
         android:layout_centerInParent="true"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
-        android:textColor="@color/black"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:text="Login"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/signupText"
