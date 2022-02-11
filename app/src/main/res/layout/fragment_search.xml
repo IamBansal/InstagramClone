@@ -28,6 +28,7 @@
                 android:layout_margin="10dp"
                 android:layout_marginStart="10dp"
                 android:id="@+id/search_bar"
+                android:background="@color/white"
                 android:hint="Search..."
                 android:layout_height="wrap_content" />
 

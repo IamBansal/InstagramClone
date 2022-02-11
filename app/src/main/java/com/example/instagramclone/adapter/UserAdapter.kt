@@ -2,12 +2,16 @@ package com.example.instagramclone.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.instagramclone.HomePageActivity
+import com.example.instagramclone.fragments.ProfileFragment
 import com.example.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -16,12 +20,13 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.R
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserAdapter(
     private var context: Context,
     private var mUsers: ArrayList<User>,
-    private var isFollowed: Boolean
+    private var isFragment: Boolean
 ) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     private var firebaseUser: FirebaseUser? = null
@@ -79,6 +84,18 @@ class UserAdapter(
 
                 FirebaseDatabase.getInstance().reference.child("Follow").child(user.id!!)
                     .child("Followers").child(firebaseUser!!.uid).removeValue()
+            }
+        }
+
+        holder.itemView.setOnClickListener {
+            if(isFragment){
+                context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileID", user.id).apply()
+                (context as FragmentActivity).supportFragmentManager.beginTransaction()
+                    .replace(com.example.instagramclone.R.id.fragment_container, ProfileFragment()).commit()
+            } else {
+                val intent = Intent(context, HomePageActivity::class.java)
+                intent.putExtra("publisherId", user.id)
+                context.startActivity(intent)
             }
         }
 

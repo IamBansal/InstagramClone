@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.CommentActivity
+import com.example.instagramclone.FollowersActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.fragments.ProfileFragment
 import com.example.instagramclone.model.Post
@@ -133,6 +134,14 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
         holder.author.setOnClickListener {
             context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileID", post.publisher).apply()
             (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
+        }
+
+        holder.noOfLikes.setOnClickListener {
+            val intent = Intent(context, FollowersActivity::class.java)
+            intent.putExtra("id", post.publisher)
+            intent.putExtra("postId", post.postId)
+            intent.putExtra("title", "Likes")
+            context.startActivity(intent)
         }
 
     }

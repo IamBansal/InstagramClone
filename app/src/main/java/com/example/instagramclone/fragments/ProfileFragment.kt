@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.EditProfileActivity
+import com.example.instagramclone.FollowersActivity
 import com.example.instagramclone.OptionsActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.adapter.PhotoAdapter
@@ -182,9 +183,24 @@ class ProfileFragment : Fragment() {
             recyclerViewMyPictures?.visibility = View.VISIBLE
             recyclerViewSavedPics?.visibility = View.GONE
         }
+
         savedPictures?.setOnClickListener {
             recyclerViewMyPictures?.visibility = View.GONE
             recyclerViewSavedPics?.visibility = View.VISIBLE
+        }
+
+        followersProfile?.setOnClickListener {
+            val intent = Intent(context, FollowersActivity::class.java)
+            intent.putExtra("id", profileId)
+            intent.putExtra("title", "Followers")
+            startActivity(intent)
+        }
+
+        followingsProfile?.setOnClickListener {
+            val intent = Intent(context, FollowersActivity::class.java)
+            intent.putExtra("id", profileId)
+            intent.putExtra("title", "Followings")
+            startActivity(intent)
         }
 
         return layout
