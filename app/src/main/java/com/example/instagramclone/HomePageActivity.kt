@@ -63,8 +63,7 @@ class HomePageActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        FirebaseAuth.getInstance().signOut()
-        startActivity(Intent(this, Login::class.java))
+        finishAffinity()
     }
 
 }

@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.EditProfileActivity
+import com.example.instagramclone.OptionsActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.adapter.PhotoAdapter
 import com.example.instagramclone.model.Post
@@ -146,6 +147,10 @@ class ProfileFragment : Fragment() {
             editProfile?.text = "Edit Profile"
         } else {
             checkFollowingStatus()
+        }
+
+        options?.setOnClickListener {
+            startActivity(Intent(context, OptionsActivity::class.java))
         }
 
         editProfile?.setOnClickListener {

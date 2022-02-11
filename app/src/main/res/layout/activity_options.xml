@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OptionsActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarOptions"
+        android:background="?android:attr/windowBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/settings"
+        android:layout_margin="10sp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:text="Settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/logout"
+        android:layout_margin="10sp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:text="Log Out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/deleteAccount"
+        android:layout_margin="10sp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:text="Delete Account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/aboutD"
+        android:layout_margin="10sp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:text="About Developer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/aboutDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20sp"
+        android:visibility="gone"
+        android:tag="Gone"
+        android:fontFamily="@font/devonshire"
+        android:text="@string/About"
+        android:textSize="18sp" />
+
+</LinearLayout>

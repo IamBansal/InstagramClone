@@ -11,4 +11,5 @@
     <string name="login_failed">"Login failed"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="About">This app is developed by Akshat Bansal.\n\nI am a rookie in coding world and I will be an year old in all this stuff at end of this project.\nThis could be my major project in android development with firebase.\nUsers, wish me good luck in for my future.\nWill be back with more applications.\nThank You :)</string>
 </resources>
