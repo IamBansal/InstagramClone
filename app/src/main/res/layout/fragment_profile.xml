@@ -186,16 +186,17 @@
 
             <Button
                 android:id="@+id/btnEditProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/amiko_semibold"
+                android:paddingEnd="10dp"
                 android:text="Edit Profile"
                 android:textAllCaps="false"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:textColor="@color/black"
-                android:backgroundTint="@color/white"
-                android:paddingEnd="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:textColor="@color/black" />
 
             <LinearLayout
                 android:id="@+id/bottom"

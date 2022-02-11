@@ -199,7 +199,7 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
                         image.setImageResource(R.drawable.ic_liked)
                         image.tag = "Liked"
                     } else {
-                        image.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+                        image.setImageResource(R.drawable.unlike)
                         image.tag = "Like"
                     }
                 }

@@ -23,13 +23,33 @@
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramClone/app/src/main/res/layout/user_item.xml" value="0.264" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramClone/app/src/main/res/menu/bottom_menu.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramClone/app/src/main/res/menu/bottom_navigation.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_add_box_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_apps_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_bookmark_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_chat_bubble_outline_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_check_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_near_me_24.xml" value="0.2484375" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.2484375" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_person_blacked.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_baseline_turned_in_not_24.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_liked.xml" value="0.2484375" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/unlike.xml" value="0.2484375" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_comment.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_edit_profile.xml" value="0.21822916666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_followers.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_home_page.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_login.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_options.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_post.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_signup.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_splash.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/comment_item.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/fragment_home.xml" value="0.23229166666666667" />
@@ -39,6 +59,7 @@
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/fragment_search.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/notification_item.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/photo_item.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/menu/bottom_menu.xml" value="0.23229166666666667" />
       </map>
     </option>
   </component>
