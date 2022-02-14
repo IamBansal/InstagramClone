@@ -20,7 +20,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.R
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserAdapter(
@@ -66,7 +65,7 @@ class UserAdapter(
 
         holder.btnFollow.setOnClickListener {
 
-            //if button showed follow, then to add details to database.
+            //If button showed follow, then to add details to database.
             if (holder.btnFollow.text.toString() == "Follow") {
                 FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid)
                     .child("Following").child(user.id!!).setValue(true)
@@ -103,8 +102,7 @@ class UserAdapter(
 
     //To add notification on following.
     private fun addNotification(id: String) {
-        val map = HashMap<String, Any>()
-        map["isPost"] = false
+        val map = HashMap<String, String>()
         map["postId"] = ""
         map["text"] = "Started following you..."
         map["userId"] = firebaseUser!!.uid

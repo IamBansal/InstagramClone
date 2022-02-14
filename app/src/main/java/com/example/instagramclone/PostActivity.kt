@@ -138,6 +138,13 @@ class PostActivity : AppCompatActivity() {
             if (resultCode == RESULT_OK) {
                 imageUri = result.uri
                 imageAdded.setImageURI(imageUri)
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                Toast.makeText(
+                    this,
+                    "Can't help with camera.\nUpload already stored or captured image.\n${result.error}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                startActivity(Intent(this, HomePageActivity::class.java))
             } else {
                 Toast.makeText(
                     this,

@@ -41,7 +41,7 @@ class NotificationFragment : Fragment() {
     }
 
     private var recyclerViewNotification : RecyclerView? = null
-    private var adapterNotification : NotificationAdapter? = null
+    private var notificationAdapter : NotificationAdapter? = null
     private var notificationList : ArrayList<Notification>? = null
 
     override fun onCreateView(
@@ -51,11 +51,13 @@ class NotificationFragment : Fragment() {
         val layout =  inflater.inflate(R.layout.fragment_notification, container, false)
 
         recyclerViewNotification = layout.findViewById(R.id.recyclerViewNotifications)
-        notificationList = ArrayList()
-        adapterNotification = NotificationAdapter(requireContext(), notificationList!!)
         recyclerViewNotification?.setHasFixedSize(true)
         recyclerViewNotification?.layoutManager = LinearLayoutManager(requireContext())
-        recyclerViewNotification?.adapter = adapterNotification
+
+        notificationList = ArrayList()
+        notificationAdapter = NotificationAdapter(requireContext(), notificationList!!)
+        recyclerViewNotification?.adapter = notificationAdapter
+
 
         readNotification()
 
@@ -68,11 +70,12 @@ class NotificationFragment : Fragment() {
             .addValueEventListener(object :ValueEventListener{
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    notificationList?.clear()
                     for (dataSnaps in snapshot.children){
-                        notificationList?.add(dataSnaps.getValue(Notification::class.java)!!)
+                        dataSnaps.getValue(Notification::class.java)?.let { notificationList?.add(it) }
                     }
                     notificationList?.reverse()
-                    adapterNotification?.notifyDataSetChanged()
+                    notificationAdapter?.notifyDataSetChanged()
                 }
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")

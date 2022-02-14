@@ -41,7 +41,8 @@ class NotificationAdapter(private var context: Context, private var mNotificatio
         getUser(holder.profileN, holder.usernameN, notification.userId.toString())
         holder.commentN.text = notification.text
 
-        if (notification.isPost!!){
+        //For checking if item is related to a post ot not.
+        if (!notification.postId.equals("")){
             holder.postN.visibility = View.VISIBLE
             getPostImage(holder.postN, notification.postId)
         } else {
@@ -50,12 +51,12 @@ class NotificationAdapter(private var context: Context, private var mNotificatio
 
         //when user click on the notification
         holder.itemView.setOnClickListener {
-            //if notification is about a post, then redirected to post detail.
-            if (notification.isPost!!){
+            //If notification is about a post, then redirected to post detail.
+            if (!notification.postId.equals("")){
                 context.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit().putString("postId", notification.postId).apply()
                 (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, PostDetailFragment()).commit()
             }
-            //if notification is not about a post, then redirected to profile of the publisher.
+            //If notification is not about a post, then redirected to profile of the publisher.
             else {
                 context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileID", notification.userId).apply()
                 (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()

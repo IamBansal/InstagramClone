@@ -148,12 +148,11 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
 
     //To add notification on the liking post.
     private fun addNotification(postId: String, publisher: String) {
-        val map = HashMap<String, Any>()
-        map["isPost"] = true
+        val map = HashMap<String, String>()
         map["postId"] = postId
         map["text"] = "Liked your post."
-        map["userId"] = publisher
-        FirebaseDatabase.getInstance().reference.child("Notifications").child(firebaseUser!!.uid).push().setValue(map)
+        map["userId"] = firebaseUser!!.uid
+        FirebaseDatabase.getInstance().reference.child("Notifications").child(publisher).push().setValue(map)
     }
 
     //To check if post is saved or not.
