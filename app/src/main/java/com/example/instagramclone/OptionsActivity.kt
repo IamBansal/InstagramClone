@@ -64,6 +64,7 @@ class OptionsActivity : AppCompatActivity() {
 
         /*
         For switching themes
+                TODO("First enable switch in xml of options activity.")
         switchButton?.isChecked = true
         val manager: UiModeManager = this.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
         switchButton?.setOnCheckedChangeListener { _, isChecked ->
