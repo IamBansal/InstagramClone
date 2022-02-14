@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.instagramclone.R
 import com.example.instagramclone.adapter.PostAdapter
+import com.example.instagramclone.adapter.StoryAdapter
 import com.example.instagramclone.model.Post
+import com.example.instagramclone.model.Story
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -44,6 +47,10 @@ class HomeFragment : Fragment() {
     private var followingList: ArrayList<String>? = null
     private var postAdapter: PostAdapter? = null
 
+    private var recyclerViewStories: RecyclerView? = null
+    private var storyList: ArrayList<Story>? = null
+    private var storyAdapter: StoryAdapter? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,7 +73,39 @@ class HomeFragment : Fragment() {
 
         checkFollowingUsers()
 
+        /*
+        For stories
+        recyclerViewStories = layout.findViewById(R.id.recyclerViewStories)
+        recyclerViewStories?.setHasFixedSize(true)
+        recyclerViewStories?.layoutManager =
+            StaggeredGridLayoutManager(1, LinearLayoutManager.HORIZONTAL)
+        storyList = ArrayList()
+        storyAdapter = StoryAdapter(requireContext(), storyList!!)
+        recyclerViewStories?.adapter = storyAdapter
+        readStory()
+
+         */
+
         return layout
+    }
+
+    //For story reading
+    private fun readStory() {
+        FirebaseDatabase.getInstance().reference.child("Story")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    storyList?.clear()
+                    for (dataSnapshot in snapshot.children) {
+                        val user: Story? = dataSnapshot.getValue(Story::class.java)
+                        storyList?.add(user!!)
+                    }
+                    storyAdapter?.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
     }
 
     //For checking those whom the current user is following.
