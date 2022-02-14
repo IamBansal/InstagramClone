@@ -31,17 +31,6 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:layout_toEndOf="@id/username_profile"
-                    android:text="AxtBansal"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
                 <ImageView
                     android:id="@+id/optionsProfile"
                     android:layout_width="wrap_content"

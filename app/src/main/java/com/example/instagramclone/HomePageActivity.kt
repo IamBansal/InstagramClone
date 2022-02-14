@@ -50,7 +50,6 @@ class HomePageActivity : AppCompatActivity() {
             val profileID = intent.getString("publisherId")
             getSharedPreferences("PROFILE", MODE_PRIVATE).edit().putString("profileID", profileID).apply()
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileUserFragment()).commit()
-            bottomNavigationView.selectedItemId = R.id.person
         } else {
             //For setting home fragment as default fragment.
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()

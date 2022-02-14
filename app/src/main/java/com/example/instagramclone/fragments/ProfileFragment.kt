@@ -100,11 +100,6 @@ class ProfileFragment : Fragment() {
 
         val layout =  inflater.inflate(R.layout.fragment_profile, container, false)
 
-        //on again getting to profile it is not showing the profile for me.
-        val data = context?.getSharedPreferences("PROFILE", Context.MODE_PRIVATE)!!.getString("profileID", "none")
-
-        onDetach()
-
         firebaseUser = FirebaseAuth.getInstance().currentUser
         profileId = firebaseUser!!.uid
 
