@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.HomePageActivity
 import com.example.instagramclone.fragments.ProfileFragment
+import com.example.instagramclone.fragments.ProfileUserFragment
 import com.example.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -90,7 +91,7 @@ class UserAdapter(
             if(isFragment){
                 context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileID", user.id).apply()
                 (context as FragmentActivity).supportFragmentManager.beginTransaction()
-                    .replace(com.example.instagramclone.R.id.fragment_container, ProfileFragment()).commit()
+                    .replace(com.example.instagramclone.R.id.fragment_container, ProfileUserFragment()).commit()
             } else {
                 val intent = Intent(context, HomePageActivity::class.java)
                 intent.putExtra("publisherId", user.id)

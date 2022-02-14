@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.R
 import com.example.instagramclone.fragments.PostDetailFragment
-import com.example.instagramclone.fragments.ProfileFragment
+import com.example.instagramclone.fragments.ProfileUserFragment
 import com.example.instagramclone.model.Notification
 import com.example.instagramclone.model.Post
 import com.example.instagramclone.model.User
@@ -59,7 +59,7 @@ class NotificationAdapter(private var context: Context, private var mNotificatio
             //If notification is not about a post, then redirected to profile of the publisher.
             else {
                 context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileID", notification.userId).apply()
-                (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
+                (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileUserFragment()).commit()
             }
         }
 

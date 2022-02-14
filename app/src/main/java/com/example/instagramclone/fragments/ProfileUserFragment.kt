@@ -38,10 +38,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
+ * Use the [ProfileUserFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ProfileFragment : Fragment() {
+class ProfileUserFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -75,38 +75,20 @@ class ProfileFragment : Fragment() {
     private var firebaseUser : FirebaseUser? = null
     private var profileId : String? = null
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        firebaseUser = FirebaseAuth.getInstance().currentUser
-        profileId = firebaseUser!!.uid
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        firebaseUser = FirebaseAuth.getInstance().currentUser
-        profileId = firebaseUser!!.uid
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        firebaseUser = FirebaseAuth.getInstance().currentUser
-        profileId = firebaseUser!!.uid
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val layout =  inflater.inflate(R.layout.fragment_profile_user, container, false)
 
-        val layout =  inflater.inflate(R.layout.fragment_profile, container, false)
-
-        //on again getting to profile it is not showing the profile for me.
         val data = context?.getSharedPreferences("PROFILE", Context.MODE_PRIVATE)!!.getString("profileID", "none")
 
-        onDetach()
-
         firebaseUser = FirebaseAuth.getInstance().currentUser
-        profileId = firebaseUser!!.uid
+        profileId = if (data.equals("none")){
+            firebaseUser!!.uid
+        } else {
+            data
+        }
 
         usernameProfile = layout.findViewById(R.id.username_profile)
         nameProfile = layout.findViewById(R.id.nameProfile)
@@ -205,7 +187,8 @@ class ProfileFragment : Fragment() {
     //to get the saved posts
     private fun getSavedPosts() {
         val savedIds = ArrayList<String>()
-        FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid).addValueEventListener(object :ValueEventListener{
+        FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid).addValueEventListener(object :
+            ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 //To get all posts in saved.
                 for (dataSnaps in snapshot.children){
@@ -213,7 +196,8 @@ class ProfileFragment : Fragment() {
                 }
 
                 //To check which post to show now.
-                FirebaseDatabase.getInstance().reference.child("Posts").addValueEventListener(object :ValueEventListener{
+                FirebaseDatabase.getInstance().reference.child("Posts").addValueEventListener(object :
+                    ValueEventListener {
                     override fun onDataChange(snapshot1: DataSnapshot) {
                         mySavedPhotoList?.clear()
                         for (snap in snapshot1.children){
@@ -239,7 +223,8 @@ class ProfileFragment : Fragment() {
 
     //To get current user's posts.
     private fun myPhotos() {
-        FirebaseDatabase.getInstance().reference.child("Posts").addValueEventListener(object :ValueEventListener{
+        FirebaseDatabase.getInstance().reference.child("Posts").addValueEventListener(object :
+            ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 myPhotoList?.clear()
                 for (dataSnapshot in snapshot.children){
@@ -260,7 +245,7 @@ class ProfileFragment : Fragment() {
     //to check if current user is following the user or not.
     private fun checkFollowingStatus() {
         FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid)
-            .child("Following").addValueEventListener(object :ValueEventListener{
+            .child("Following").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.child(profileId.toString()).exists()){
                         editProfile?.text = "Following"
@@ -278,7 +263,8 @@ class ProfileFragment : Fragment() {
 
     //To get post count
     private fun getPostCount() {
-        FirebaseDatabase.getInstance().reference.child("Posts").addValueEventListener(object :ValueEventListener{
+        FirebaseDatabase.getInstance().reference.child("Posts").addValueEventListener(object :
+            ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var count = 0
                 for (dataSnapshot in snapshot.children) {
@@ -298,25 +284,25 @@ class ProfileFragment : Fragment() {
     //to get number of followers and followings.
     private fun getFollowersAndFollowings() {
         val ref = FirebaseDatabase.getInstance().reference.child("Follow").child(profileId!!)
-            //To get number of followers.
-            ref.child("Followers").addValueEventListener(object :ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    followersProfile?.text = snapshot.childrenCount.toString()
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
+        //To get number of followers.
+        ref.child("Followers").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                followersProfile?.text = snapshot.childrenCount.toString()
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
 
-            //To get number of followings.
-            ref.child("Following").addValueEventListener(object :ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    followingsProfile?.text = snapshot.childrenCount.toString()
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
+        //To get number of followings.
+        ref.child("Following").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                followingsProfile?.text = snapshot.childrenCount.toString()
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
 
 
     }
@@ -324,7 +310,8 @@ class ProfileFragment : Fragment() {
     //To get userinfo
     private fun userInfo() {
 
-        FirebaseDatabase.getInstance().reference.child("Users").child(profileId!!).addValueEventListener(object :ValueEventListener{
+        FirebaseDatabase.getInstance().reference.child("Users").child(profileId!!).addValueEventListener(object :
+            ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user = snapshot.getValue(User::class.java)
                 if (user?.imageUrl.equals("default")) {
@@ -351,12 +338,12 @@ class ProfileFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
+         * @return A new instance of fragment ProfileUserFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
+            ProfileUserFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

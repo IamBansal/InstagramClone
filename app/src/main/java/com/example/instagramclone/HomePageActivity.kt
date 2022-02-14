@@ -5,10 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import androidx.fragment.app.Fragment
-import com.example.instagramclone.fragments.HomeFragment
-import com.example.instagramclone.fragments.NotificationFragment
-import com.example.instagramclone.fragments.ProfileFragment
-import com.example.instagramclone.fragments.SearchFragment
+import com.example.instagramclone.fragments.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
@@ -52,7 +49,7 @@ class HomePageActivity : AppCompatActivity() {
         if(intent != null) {
             val profileID = intent.getString("publisherId")
             getSharedPreferences("PROFILE", MODE_PRIVATE).edit().putString("profileID", profileID).apply()
-            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileUserFragment()).commit()
             bottomNavigationView.selectedItemId = R.id.person
         } else {
             //For setting home fragment as default fragment.
