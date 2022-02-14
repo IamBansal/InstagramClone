@@ -17,7 +17,8 @@
             android:exported="false" />
         <activity
             android:name=".OptionsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="uiMode"/>
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
