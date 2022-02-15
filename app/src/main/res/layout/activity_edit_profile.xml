@@ -67,7 +67,6 @@
             android:id="@+id/civProfileImage"
             android:layout_gravity="center"
             android:layout_marginTop="70sp"
-            android:src="@mipmap/ic_launcher"
             android:layout_height="90sp"/>
 
         <TextView

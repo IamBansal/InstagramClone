@@ -24,7 +24,7 @@ class PhotoAdapter(private var context: Context, private var mPhoto : ArrayList<
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = mPhoto[position]
-        Picasso.get().load(post.imageUrl).placeholder(R.mipmap.ic_launcher).into(holder.postImage)
+        Picasso.get().load(post.imageUrl).placeholder(R.drawable.ic_baseline_post_add_24).into(holder.postImage)
 
         holder.postImage.setOnClickListener {
             context.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit().putString("postId", post.postId).apply()

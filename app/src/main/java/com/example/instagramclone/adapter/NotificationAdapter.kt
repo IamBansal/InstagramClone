@@ -70,7 +70,7 @@ class NotificationAdapter(private var context: Context, private var mNotificatio
         FirebaseDatabase.getInstance().reference.child("Posts").child(postId!!).addValueEventListener(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val post = snapshot.getValue(Post::class.java)
-                Picasso.get().load(post?.imageUrl).placeholder(R.mipmap.ic_launcher).into(postN)
+                Picasso.get().load(post?.imageUrl).placeholder(R.drawable.ic_baseline_post_add_24).into(postN)
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")

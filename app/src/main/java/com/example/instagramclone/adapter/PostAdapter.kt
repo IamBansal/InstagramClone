@@ -69,7 +69,7 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
                     if (user?.imageUrl.equals("default")) {
                         holder.profilePost.setImageResource(R.drawable.ic_baseline_person_24)
                     } else {
-                        Picasso.get().load(user?.imageUrl).into(holder.profilePost)
+                        Picasso.get().load(user?.imageUrl).placeholder(R.drawable.ic_baseline_person_24).into(holder.profilePost)
                     }
                     holder.usernamePost.text = user?.Username
                     holder.author.text = user?.Name

@@ -317,7 +317,7 @@ class ProfileUserFragment : Fragment() {
                 if (user?.imageUrl.equals("default")) {
                     imagePProfile?.setImageResource(R.drawable.ic_baseline_person_24)
                 } else {
-                    Picasso.get().load(user?.imageUrl).into(imagePProfile)
+                    Picasso.get().load(user?.imageUrl).placeholder(R.drawable.ic_baseline_person_24).into(imagePProfile)
                 }
                 usernameProfile?.text = user?.Username
                 nameProfile?.text = user?.Name

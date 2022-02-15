@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.HomePageActivity
+import com.example.instagramclone.R
 import com.example.instagramclone.fragments.ProfileFragment
 import com.example.instagramclone.fragments.ProfileUserFragment
 import com.example.instagramclone.model.User
@@ -55,8 +56,13 @@ class UserAdapter(
         holder.nameItem.text = user.Name
 
         //To get image in profile.
-        Picasso.get().load(user.imageUrl)
-            .placeholder(com.example.instagramclone.R.mipmap.ic_launcher).into(holder.imageProfile)
+        if(user.imageUrl.equals("default")){
+            holder.imageProfile.setImageResource(R.drawable.ic_baseline_person_24)
+        } else {
+            Picasso.get().load(user.imageUrl)
+                .placeholder(com.example.instagramclone.R.drawable.ic_baseline_person_24)
+                .into(holder.imageProfile)
+        }
 
         isFollowed(user.id, holder.btnFollow)
 
