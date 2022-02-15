@@ -136,6 +136,19 @@ class OptionsActivity : AppCompatActivity() {
                 .show()
         }
 
+        //To add a new account when logged in.
+        addAccount?.setOnClickListener { val alert = AlertDialog.Builder(this)
+            alert.setTitle("Add New Account Requested!!")
+                .setMessage("You will be logged out from this account.\nYou sure you want to add a new account?")
+                .setPositiveButton("Yes, Add New!") { _, _ ->
+                    FirebaseAuth.getInstance().signOut()
+                    startActivity(Intent(this, Signup::class.java))
+                }
+                .setNegativeButton("No"){_,_->}
+                .create()
+                .show()
+        }
+
         //To logout the user.
         logOut?.setOnClickListener {
             val alert = AlertDialog.Builder(this)
