@@ -86,7 +86,7 @@ class NotificationAdapter(private var context: Context, private var mNotificatio
                 if (user?.imageUrl.equals("default")){
                     profile.setImageResource(R.drawable.ic_baseline_person_24)
                 } else {
-                    Picasso.get().load(user?.imageUrl).into(profile)
+                    Picasso.get().load(user?.imageUrl).placeholder(R.drawable.ic_baseline_person_24).into(profile)
                 }
                 username.text = user?.Username
             }
