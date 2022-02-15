@@ -18,10 +18,17 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import com.example.instagramclone.fragments.ProfileFragment
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class OptionsActivity : AppCompatActivity() {
 
     private var settings: TextView? = null
+    private var resetPassword: TextView? = null
+    private var updateEmail: TextView? = null
+    private var addAccount: TextView? = null
     private var logOut: TextView? = null
     private var deleteAccount: TextView? = null
     private var aboutDeveloper: TextView? = null
@@ -35,6 +42,9 @@ class OptionsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_options)
 
         settings = findViewById(R.id.settings)
+        resetPassword = findViewById(R.id.passwordReset)
+        updateEmail = findViewById(R.id.updateEmail)
+        addAccount = findViewById(R.id.addAccount)
         logOut = findViewById(R.id.logout)
         deleteAccount = findViewById(R.id.deleteAccount)
         aboutDeveloper = findViewById(R.id.aboutD)
@@ -83,6 +93,48 @@ class OptionsActivity : AppCompatActivity() {
         }
 
          */
+
+        //To reset the password.
+        resetPassword?.setOnClickListener {
+
+            val alert = AlertDialog.Builder(this)
+            alert.setTitle("Password Reset Requested!!")
+                .setMessage("You sure you want to reset the password?")
+                .setPositiveButton("Yes, Reset!") { _, _ ->
+
+                    val user = FirebaseAuth.getInstance().currentUser
+
+                    FirebaseDatabase.getInstance().reference.child("Users").child(user!!.uid)
+                        .child("Email").addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val email = snapshot.value
+
+                            FirebaseAuth.getInstance().sendPasswordResetEmail(email.toString())
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "Check email and reset the password.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            applicationContext,
+                                            task.exception?.message,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+                    })
+                }
+                .setNegativeButton("No"){_,_->}
+                .create()
+                .show()
+        }
 
         //To logout the user.
         logOut?.setOnClickListener {
