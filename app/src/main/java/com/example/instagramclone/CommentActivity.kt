@@ -79,6 +79,7 @@ class CommentActivity : AppCompatActivity() {
             if (TextUtils.isEmpty(addComment?.text)) {
                 Toast.makeText(this, "No comment added.", Toast.LENGTH_SHORT).show()
             } else {
+                addNotification(postId.toString(), author.toString())
                 putComment()
             }
         }
@@ -87,7 +88,16 @@ class CommentActivity : AppCompatActivity() {
 
     }
 
-    //Tpo get the comment of the posts.
+    //To add notification on commenting on the post.
+    private fun addNotification(postId: String, publisher: String) {
+        val map = HashMap<String, String>()
+        map["postId"] = postId
+        map["text"] = "Commented on your post."
+        map["userId"] = firebaseUser!!.uid
+        FirebaseDatabase.getInstance().reference.child("Notifications").child(publisher).push().setValue(map)
+    }
+
+    //To get the comment of the posts.
     private fun getComment() {
 
         FirebaseDatabase.getInstance().reference.child("Comments").child(postId.toString())

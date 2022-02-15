@@ -78,6 +78,7 @@ class PostDetailFragment : Fragment() {
         })
 
         backButton?.setOnClickListener {
+//            activity?.finish()
             (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
         }
 

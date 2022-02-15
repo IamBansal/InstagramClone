@@ -147,7 +147,7 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
 
     }
 
-    //To add notification on the liking post.
+    //To add notification on liking the post.
     private fun addNotification(postId: String, publisher: String) {
         val map = HashMap<String, String>()
         map["postId"] = postId
