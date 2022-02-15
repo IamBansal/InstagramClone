@@ -90,11 +90,14 @@ class CommentActivity : AppCompatActivity() {
 
     //To add notification on commenting on the post.
     private fun addNotification(postId: String, publisher: String) {
-        val map = HashMap<String, String>()
-        map["postId"] = postId
-        map["text"] = "Commented on your post."
-        map["userId"] = firebaseUser!!.uid
-        FirebaseDatabase.getInstance().reference.child("Notifications").child(publisher).push().setValue(map)
+        if (publisher != firebaseUser!!.uid) {
+            val map = HashMap<String, String>()
+            map["postId"] = postId
+            map["text"] = "Commented on your post."
+            map["userId"] = firebaseUser!!.uid
+            FirebaseDatabase.getInstance().reference.child("Notifications").child(publisher).push()
+                .setValue(map)
+        }
     }
 
     //To get the comment of the posts.

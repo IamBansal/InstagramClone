@@ -143,6 +143,8 @@ class ProfileUserFragment : Fragment() {
                         .child("Following").child(profileId.toString()).setValue(true)
                     FirebaseDatabase.getInstance().reference.child("Follow").child(profileId.toString())
                         .child("Followers").child(firebaseUser!!.uid).setValue(true)
+
+                    addNotification(profileId.toString())
                 }
                 //to unfollow if it shows following
                 else {
@@ -182,6 +184,15 @@ class ProfileUserFragment : Fragment() {
         }
 
         return layout
+    }
+
+    //To add notification on following.
+    private fun addNotification(id: String) {
+        val map = HashMap<String, String>()
+        map["postId"] = ""
+        map["text"] = "Started following you..."
+        map["userId"] = firebaseUser!!.uid
+        FirebaseDatabase.getInstance().reference.child("Notifications").child(id).push().setValue(map)
     }
 
     //to get the saved posts
