@@ -1,12 +1,15 @@
 package com.example.instagramclone.adapter
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.CommentActivity
@@ -46,6 +49,9 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
         val author: TextView = itemView.findViewById(R.id.author)
         val noOfComments: TextView = itemView.findViewById(R.id.no_of_comments)
         val descriptionPost: SocialTextView = itemView.findViewById(R.id.description_post)
+        val llMore: LinearLayout = itemView.findViewById(R.id.llMore)
+        val whyPost: TextView = itemView.findViewById(R.id.whyPost)
+        val unfollowMore: TextView = itemView.findViewById(R.id.unfollowMore)
 
     }
 
@@ -95,6 +101,39 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
                 FirebaseDatabase.getInstance().reference.child("Likes")
                     .child(post.postId.toString()).child(firebaseUser!!.uid).removeValue()
             }
+        }
+
+        holder.more.setOnClickListener {
+            if (holder.llMore.tag == "Visible") {
+                holder.llMore.visibility = View.GONE
+                holder.postImage.visibility = View.VISIBLE
+                holder.llMore.tag = "Gone"
+            } else {
+                holder.llMore.visibility = View.VISIBLE
+                if (post.publisher == firebaseUser!!.uid){
+                    holder.unfollowMore.visibility = View.INVISIBLE
+                }
+                holder.postImage.visibility = View.INVISIBLE
+                holder.llMore.tag = "Visible"
+            }
+        }
+
+        holder.unfollowMore.setOnClickListener {
+            FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid)
+                .child("Following").child(post.publisher.toString()).removeValue()
+
+            FirebaseDatabase.getInstance().reference.child("Follow").child(post.publisher.toString())
+                .child("Followers").child(firebaseUser!!.uid).removeValue()
+        }
+
+        holder.whyPost.setOnClickListener {
+            val alert = AlertDialog.Builder(context)
+            alert.setTitle("Why you are seeing this post?")
+                .setMessage("You are seeing this post as you must be following the publisher.\n" +
+                        "Or you are viewing that user.")
+                .setPositiveButton("Ok, Cool!!"){_,_->}
+                .create()
+                .show()
         }
 
         holder.comment.setOnClickListener {
