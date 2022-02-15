@@ -75,7 +75,8 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
                     if (user?.imageUrl.equals("default")) {
                         holder.profilePost.setImageResource(R.drawable.ic_baseline_person_24)
                     } else {
-                        Picasso.get().load(user?.imageUrl).placeholder(R.drawable.ic_baseline_person_24).into(holder.profilePost)
+                        Picasso.get().load(user?.imageUrl)
+                            .placeholder(R.drawable.ic_baseline_person_24).into(holder.profilePost)
                     }
                     holder.usernamePost.text = user?.Username
                     holder.author.text = user?.Name
@@ -103,6 +104,7 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
             }
         }
 
+        //For showing options on clicking more icon.
         holder.more.setOnClickListener {
             if (holder.llMore.tag == "Visible") {
                 holder.llMore.visibility = View.GONE
@@ -110,7 +112,7 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
                 holder.llMore.tag = "Gone"
             } else {
                 holder.llMore.visibility = View.VISIBLE
-                if (post.publisher == firebaseUser!!.uid){
+                if (post.publisher == firebaseUser!!.uid) {
                     holder.unfollowMore.visibility = View.INVISIBLE
                 }
                 holder.postImage.visibility = View.INVISIBLE
@@ -118,20 +120,34 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
             }
         }
 
+        //To unfollow the user from post.
         holder.unfollowMore.setOnClickListener {
             FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid)
                 .child("Following").child(post.publisher.toString()).removeValue()
 
-            FirebaseDatabase.getInstance().reference.child("Follow").child(post.publisher.toString())
+            FirebaseDatabase.getInstance().reference.child("Follow")
+                .child(post.publisher.toString())
                 .child("Followers").child(firebaseUser!!.uid).removeValue()
         }
 
+        //To show why current user is seeing the post
         holder.whyPost.setOnClickListener {
             val alert = AlertDialog.Builder(context)
             alert.setTitle("Why you are seeing this post?")
-                .setMessage("You are seeing this post as you must be following the publisher.\n" +
-                        "Or you are viewing that user.")
-                .setPositiveButton("Ok, Cool!!"){_,_->}
+            if (post.publisher == firebaseUser!!.uid) {
+                alert.setMessage(
+                    "You are seeing this post as you are the publisher of the post."
+                )
+            } else {
+                alert.setMessage(
+                    "You are seeing this post as you must be following the publisher.\n" +
+                            "Or you are viewing that user."
+                )
+            }
+            alert.setPositiveButton("Ok, Cool!!") { _, _ ->
+                holder.llMore.visibility = View.GONE
+                holder.postImage.visibility = View.VISIBLE
+            }
                 .create()
                 .show()
         }
@@ -152,28 +168,34 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
 
         //to save or un-save a post.
         holder.save.setOnClickListener {
-            if (holder.save.tag == "Save"){
-                FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid).
-                    child(post.postId.toString()).setValue(true)
-            }else {
-                FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid).
-                child(post.postId.toString()).removeValue()
+            if (holder.save.tag == "Save") {
+                FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid)
+                    .child(post.postId.toString()).setValue(true)
+            } else {
+                FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid)
+                    .child(post.postId.toString()).removeValue()
             }
         }
 
         holder.profilePost.setOnClickListener {
-            context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileID", post.publisher).apply()
-            (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileUserFragment()).commit()
+            context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
+                .putString("profileID", post.publisher).apply()
+            (context as FragmentActivity).supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ProfileUserFragment()).commit()
         }
 
         holder.usernamePost.setOnClickListener {
-            context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileID", post.publisher).apply()
-            (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileUserFragment()).commit()
+            context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
+                .putString("profileID", post.publisher).apply()
+            (context as FragmentActivity).supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ProfileUserFragment()).commit()
         }
 
         holder.author.setOnClickListener {
-            context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileID", post.publisher).apply()
-            (context as FragmentActivity).supportFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileUserFragment()).commit()
+            context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
+                .putString("profileID", post.publisher).apply()
+            (context as FragmentActivity).supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ProfileUserFragment()).commit()
         }
 
         holder.noOfLikes.setOnClickListener {
@@ -200,20 +222,22 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
 
     //To check if post is saved or not.
     private fun isSaved(postID: String, save: ImageView) {
-        FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid).addValueEventListener(object :ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.child(postID).exists()){
-                    save.setImageResource(R.drawable.ic_baseline_bookmark_24)
-                    save.tag = "Saved"
-                } else {
-                    save.setImageResource(R.drawable.ic_baseline_turned_in_not_24)
-                    save.tag = "Save"
+        FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.child(postID).exists()) {
+                        save.setImageResource(R.drawable.ic_baseline_bookmark_24)
+                        save.tag = "Saved"
+                    } else {
+                        save.setImageResource(R.drawable.ic_baseline_turned_in_not_24)
+                        save.tag = "Save"
+                    }
                 }
-            }
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
     }
 
     //To get the number of comments.
