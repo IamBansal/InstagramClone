@@ -1,22 +1,14 @@
 package com.example.instagramclone
 
-import android.app.UiModeManager
-import android.content.Context
 import android.content.Intent
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.Switch
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentActivity
-import com.example.instagramclone.fragments.ProfileFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -28,6 +20,8 @@ class OptionsActivity : AppCompatActivity() {
     private var settings: TextView? = null
     private var resetPassword: TextView? = null
     private var updateEmail: TextView? = null
+    private var updateEmailF: Button? = null
+    private var emailText: EditText? = null
     private var addAccount: TextView? = null
     private var logOut: TextView? = null
     private var deleteAccount: TextView? = null
@@ -36,6 +30,7 @@ class OptionsActivity : AppCompatActivity() {
     private var toolbar: Toolbar? = null
     private var switchButton: SwitchCompat? = null
     private var linearLayout: LinearLayout? = null
+    private var linearLayoutEmail: LinearLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +39,8 @@ class OptionsActivity : AppCompatActivity() {
         settings = findViewById(R.id.settings)
         resetPassword = findViewById(R.id.passwordReset)
         updateEmail = findViewById(R.id.updateEmail)
+        updateEmailF = findViewById(R.id.updateText)
+        emailText = findViewById(R.id.updateET)
         addAccount = findViewById(R.id.addAccount)
         logOut = findViewById(R.id.logout)
         deleteAccount = findViewById(R.id.deleteAccount)
@@ -52,6 +49,7 @@ class OptionsActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbarOptions)
         switchButton = findViewById(R.id.switchBtn)
         linearLayout = findViewById(R.id.llOptions)
+        linearLayoutEmail = findViewById(R.id.llOptionsEmail)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -62,11 +60,11 @@ class OptionsActivity : AppCompatActivity() {
 
         //Settings part - not yet implemented
         settings?.setOnClickListener {
-            Toast.makeText(this, "Not yet implemented!!\nSorry :|", Toast.LENGTH_SHORT).show()
             if (linearLayout?.tag!! == "Visible") {
                 linearLayout?.visibility = View.GONE
                 linearLayout?.tag = "Gone"
             } else {
+                Toast.makeText(this, "Not yet implemented!!\nSorry :|", Toast.LENGTH_SHORT).show()
                 linearLayout?.visibility = View.VISIBLE
                 linearLayout?.tag = "Visible"
             }
@@ -106,47 +104,96 @@ class OptionsActivity : AppCompatActivity() {
 
                     FirebaseDatabase.getInstance().reference.child("Users").child(user!!.uid)
                         .child("Email").addValueEventListener(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            val email = snapshot.value
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                val email = snapshot.value
 
-                            FirebaseAuth.getInstance().sendPasswordResetEmail(email.toString())
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Check email and reset the password.",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    } else {
-                                        Toast.makeText(
-                                            applicationContext,
-                                            task.exception?.message,
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                FirebaseAuth.getInstance().sendPasswordResetEmail(email.toString())
+                                    .addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            Toast.makeText(
+                                                applicationContext,
+                                                "Check email and reset the password.",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        } else {
+                                            Toast.makeText(
+                                                applicationContext,
+                                                task.exception?.message,
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
-                                }
-                        }
-                        override fun onCancelled(error: DatabaseError) {
-                            TODO("Not yet implemented")
-                        }
-                    })
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+                        })
                 }
-                .setNegativeButton("No"){_,_->}
+                .setNegativeButton("No") { _, _ -> }
                 .create()
                 .show()
         }
 
         //To add a new account when logged in.
-        addAccount?.setOnClickListener { val alert = AlertDialog.Builder(this)
+        addAccount?.setOnClickListener {
+            val alert = AlertDialog.Builder(this)
             alert.setTitle("Add New Account Requested!!")
                 .setMessage("You will be logged out from this account.\nYou sure you want to add a new account?")
                 .setPositiveButton("Yes, Add New!") { _, _ ->
                     FirebaseAuth.getInstance().signOut()
                     startActivity(Intent(this, Signup::class.java))
                 }
-                .setNegativeButton("No"){_,_->}
+                .setNegativeButton("No") { _, _ -> }
                 .create()
                 .show()
+        }
+
+        //To show edit text for updating the email
+        updateEmail?.setOnClickListener {
+            if (linearLayoutEmail?.tag!! == "Visible") {
+                linearLayoutEmail?.visibility = View.GONE
+                linearLayoutEmail?.tag = "Gone"
+            } else {
+                linearLayoutEmail?.visibility = View.VISIBLE
+                linearLayoutEmail?.tag = "Visible"
+            }
+        }
+
+        //To update the email
+        updateEmailF?.setOnClickListener {
+            if (TextUtils.isEmpty(emailText?.text)) {
+                Toast.makeText(this, "Enter new email first.", Toast.LENGTH_SHORT).show()
+            } else {
+                val alert = AlertDialog.Builder(this)
+                alert.setTitle("Email Update Requested!!")
+                    .setMessage("You sure you want to update the email?")
+                    .setPositiveButton("Yes, Update!") { _, _ ->
+
+                        val user = FirebaseAuth.getInstance().currentUser
+
+                        user!!.updateEmail(emailText?.text.toString())
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    emailText?.text?.clear()
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Email updated.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        task.exception?.message,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                    }
+                    .setNegativeButton("No") { _, _ -> }
+                    .create()
+                    .show()
+            }
         }
 
         //To logout the user.
