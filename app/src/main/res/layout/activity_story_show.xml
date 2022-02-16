@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".StoryShowActivity">
 
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/rvStory"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent" />-->
+
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:layout_alignParentTop="true"
         android:id="@+id/progress"
@@ -39,7 +44,7 @@
                     android:tag="NotPaused"
                     android:textAllCaps="false"
                     android:text="Pause Story"
-                    android:layout_marginStart="100dp"
+                    android:layout_marginStart="140dp"
                     android:textColor="@color/black"
                     android:backgroundTint="@color/white"
                     android:layout_width="wrap_content"

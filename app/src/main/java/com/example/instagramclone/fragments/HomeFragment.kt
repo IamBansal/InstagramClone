@@ -92,24 +92,19 @@ class HomeFragment : Fragment() {
         recyclerViewStories?.adapter = storyAdapter
 
         addStory?.setOnClickListener {
-            startActivity(Intent(context, StoryPostActivity::class.java))
+            checkIfOnlyStory()
+//            startActivity(Intent(context, StoryPostActivity::class.java))
         }
 
         return layout
     }
 
     //To add story.
-    private fun addStoryNow() {
-        val map = HashMap<String, Any>()
-        map["imageUrl"] = ""
-        map["storyId"] = ""
-        map["publisher"] = FirebaseAuth.getInstance().currentUser!!.uid
-        val ref = FirebaseDatabase.getInstance().reference.child("Story")
-            .child(FirebaseAuth.getInstance().currentUser!!.uid)
-        ref.addValueEventListener(object : ValueEventListener {
+    private fun checkIfOnlyStory() {
+        FirebaseDatabase.getInstance().reference.child("Story").child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (!snapshot.hasChildren()) {
-                    ref.push().updateChildren(map)
+                    startActivity(Intent(context, StoryPostActivity::class.java))
                 } else {
                     Toast.makeText(context, "Already Added One.\nWill implement more than one story post later.", Toast.LENGTH_SHORT).show()
                 }

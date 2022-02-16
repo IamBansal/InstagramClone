@@ -66,7 +66,7 @@ class StoryPostActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     imageUrl = task.result.toString()
 
-                    val ref = FirebaseDatabase.getInstance().getReference("Story")
+                    val ref = FirebaseDatabase.getInstance().getReference("Story").child(FirebaseAuth.getInstance().currentUser!!.uid)
                     val storyId = ref.push().key
 
                     val map = HashMap<String, String>()
@@ -74,7 +74,7 @@ class StoryPostActivity : AppCompatActivity() {
                     map["imageUrl"] = imageUrl
                     map["publisher"] = FirebaseAuth.getInstance().currentUser!!.uid
 
-                    ref.child(FirebaseAuth.getInstance().currentUser!!.uid).child(storyId.toString()).setValue(map)
+                    ref.child(storyId.toString()).setValue(map)
                     pd.dismiss()
                     Toast.makeText(
                         this,
