@@ -1,17 +1,14 @@
 package com.example.instagramclone.fragments
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.instagramclone.PostActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.adapter.PostAdapter
 import com.example.instagramclone.adapter.StoryAdapter

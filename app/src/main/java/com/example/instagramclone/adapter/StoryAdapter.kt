@@ -1,12 +1,14 @@
 package com.example.instagramclone.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.R
+import com.example.instagramclone.StoryShowActivity
 import com.example.instagramclone.model.Story
 import com.example.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -31,6 +33,13 @@ class StoryAdapter(private var context: Context, private var mStories : ArrayLis
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val story = mStories[position]
         getUser(holder.image, holder.usernameS, story.userId.toString())
+
+        holder.itemView.setOnClickListener{
+            val intent = Intent(context, StoryShowActivity::class.java)
+            intent.putExtra("user", story.userId.toString())
+            context.startActivity(intent)
+        }
+
     }
 
     //For getting the publisher in notification.
