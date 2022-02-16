@@ -1,15 +1,19 @@
 package com.example.instagramclone.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.instagramclone.PostActivity
 import com.example.instagramclone.R
+import com.example.instagramclone.StoryPostActivity
 import com.example.instagramclone.adapter.PostAdapter
 import com.example.instagramclone.adapter.StoryAdapter
 import com.example.instagramclone.model.Post
@@ -86,10 +90,9 @@ class HomeFragment : Fragment() {
         storyList = ArrayList()
         storyAdapter = StoryAdapter(requireContext(), storyList!!)
         recyclerViewStories?.adapter = storyAdapter
-        readStory()
 
         addStory?.setOnClickListener {
-            addStoryNow()
+            startActivity(Intent(context, StoryPostActivity::class.java))
         }
 
         return layout
@@ -98,13 +101,17 @@ class HomeFragment : Fragment() {
     //To add story.
     private fun addStoryNow() {
         val map = HashMap<String, Any>()
-        map["userId"] = FirebaseAuth.getInstance().currentUser!!.uid
+        map["imageUrl"] = ""
+        map["storyId"] = ""
+        map["publisher"] = FirebaseAuth.getInstance().currentUser!!.uid
         val ref = FirebaseDatabase.getInstance().reference.child("Story")
             .child(FirebaseAuth.getInstance().currentUser!!.uid)
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (!snapshot.hasChildren()) {
                     ref.push().updateChildren(map)
+                } else {
+                    Toast.makeText(context, "Already Added One.\nWill implement more than one story post later.", Toast.LENGTH_SHORT).show()
                 }
             }
             override fun onCancelled(error: DatabaseError) {
@@ -121,19 +128,15 @@ class HomeFragment : Fragment() {
                     storyList?.clear()
                     for (dataSnapshot in snapshot.children) {
                         for (dataSnapshots in dataSnapshot.children) {
-                            val user: Story? = dataSnapshots.getValue(Story::class.java)
-                            if (user?.userId.equals(FirebaseAuth.getInstance().currentUser!!.uid) && !storyList!!.contains(
-                                    user!!
-                                )
-                            ) {
-                                storyList?.add(0, user)
-                            } else if (user?.userId.equals(FirebaseAuth.getInstance().currentUser!!.uid) && storyList!!.contains(
-                                    user!!
-                                )
-                            ) {
-                                //Do nothing
-                            } else {
-                                storyList?.add(user!!)
+                            val story: Story? = dataSnapshots.getValue(Story::class.java)
+                            for (id in followingList!!) {
+                                if (story?.publisher!! == id) {
+                                    if (story.publisher == FirebaseAuth.getInstance().currentUser!!.uid) {
+                                        storyList?.add(0, story)
+                                    } else {
+                                        storyList?.add(story)
+                                    }
+                                }
                             }
                         }
                     }
@@ -143,7 +146,38 @@ class HomeFragment : Fragment() {
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }
+
             })
+
+//        FirebaseDatabase.getInstance().reference.child("Story")
+//            .addValueEventListener(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    storyList?.clear()
+//                    for (dataSnapshot in snapshot.children) {
+//                        for (dataSnapshots in dataSnapshot.children) {
+//                            val user: Story? = dataSnapshots.getValue(Story::class.java)
+//                            if (user?.publisher.equals(FirebaseAuth.getInstance().currentUser!!.uid) && !storyList!!.contains(
+//                                    user!!
+//                                )
+//                            ) {
+//                                storyList?.add(0, user)
+//                            } else if (user?.publisher.equals(FirebaseAuth.getInstance().currentUser!!.uid) && storyList!!.contains(
+//                                    user!!
+//                                )
+//                            ) {
+//                                //Do nothing
+//                            } else {
+//                                storyList?.add(user!!)
+//                            }
+//                        }
+//                    }
+//                    storyAdapter?.notifyDataSetChanged()
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//                    TODO("Not yet implemented")
+//                }
+//            })
     }
 
     //For checking those whom the current user is following.
@@ -159,6 +193,7 @@ class HomeFragment : Fragment() {
                         followingList?.add(dataSnapshot.key.toString())
                     }
                     readPost()
+                    readStory()
                 }
 
                 override fun onCancelled(error: DatabaseError) {

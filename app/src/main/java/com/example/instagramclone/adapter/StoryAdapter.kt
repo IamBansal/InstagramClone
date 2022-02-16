@@ -32,11 +32,12 @@ class StoryAdapter(private var context: Context, private var mStories : ArrayLis
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val story = mStories[position]
-        getUser(holder.image, holder.usernameS, story.userId.toString())
+        getUser(holder.image, holder.usernameS, story.publisher.toString())
 
         holder.itemView.setOnClickListener{
             val intent = Intent(context, StoryShowActivity::class.java)
-            intent.putExtra("user", story.userId.toString())
+            intent.putExtra("user", story.publisher.toString())
+            intent.putExtra("storyId", story.storyId.toString())
             context.startActivity(intent)
         }
 
