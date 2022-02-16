@@ -11,7 +11,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -126,6 +129,7 @@ class Signup : AppCompatActivity() {
                             FirebaseDatabase.getInstance().reference.child("Users")
                                 .child(firebaseAuth?.currentUser!!.uid).updateChildren(map)
                                 .addOnCompleteListener { task1 ->
+                                    addStoryNow()
                                     progressBar.dismiss()
                                     if (task1.isSuccessful) {
                                         Toast.makeText(
@@ -152,6 +156,24 @@ class Signup : AppCompatActivity() {
             }
         }
 
+    }
+
+    //To add default your story on signing.
+    private fun addStoryNow() {
+        val map = HashMap<String, Any>()
+        map["userId"] = FirebaseAuth.getInstance().currentUser!!.uid
+        val ref = FirebaseDatabase.getInstance().reference.child("Story")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid)
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.hasChildren()) {
+                    ref.push().updateChildren(map)
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
 }

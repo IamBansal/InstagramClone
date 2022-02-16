@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.R
 import com.example.instagramclone.model.Story
 import com.example.instagramclone.model.User
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -34,16 +35,19 @@ class StoryAdapter(private var context: Context, private var mStories : ArrayLis
 
     //For getting the publisher in notification.
     private fun getUser(profile: CircleImageView, username: TextView, userId : String) {
-        FirebaseDatabase.getInstance().reference.child("Story").child(userId).addValueEventListener(object :
-            ValueEventListener {
+        FirebaseDatabase.getInstance().reference.child("Users").child(userId).addValueEventListener(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user = snapshot.getValue(User::class.java)
                 if (user?.imageUrl.equals("default")){
                     profile.setImageResource(R.drawable.ic_baseline_person_24)
                 } else {
-                    Picasso.get().load(user?.imageUrl).into(profile)
+                    Picasso.get().load(user?.imageUrl).placeholder(R.drawable.ic_baseline_person_24).into(profile)
                 }
-                username.text = user?.Username
+                if (user?.id.equals(FirebaseAuth.getInstance().currentUser!!.uid)){
+                    username.text = "Your story"
+                } else {
+                    username.text = user?.Username
+                }
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")

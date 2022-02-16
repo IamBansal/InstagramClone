@@ -1,13 +1,17 @@
 package com.example.instagramclone.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.instagramclone.PostActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.adapter.PostAdapter
 import com.example.instagramclone.adapter.StoryAdapter
@@ -51,12 +55,17 @@ class HomeFragment : Fragment() {
     private var storyList: ArrayList<Story>? = null
     private var storyAdapter: StoryAdapter? = null
 
+    private var addStory: ImageView? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         val layout = inflater.inflate(R.layout.fragment_home, container, false)
+
+        addStory = layout.findViewById(R.id.addStory)
+
         recyclerViewPosts = layout.findViewById(R.id.recyclerViewPosts)
         recyclerViewPosts?.setHasFixedSize(true)
         val llLayout = LinearLayoutManager(requireContext())
@@ -73,8 +82,6 @@ class HomeFragment : Fragment() {
 
         checkFollowingUsers()
 
-        /*
-        For stories
         recyclerViewStories = layout.findViewById(R.id.recyclerViewStories)
         recyclerViewStories?.setHasFixedSize(true)
         recyclerViewStories?.layoutManager =
@@ -84,9 +91,29 @@ class HomeFragment : Fragment() {
         recyclerViewStories?.adapter = storyAdapter
         readStory()
 
-         */
+        addStory?.setOnClickListener {
+            addStoryNow()
+        }
 
         return layout
+    }
+
+    //To add story.
+    private fun addStoryNow() {
+        val map = HashMap<String, Any>()
+        map["userId"] = FirebaseAuth.getInstance().currentUser!!.uid
+        val ref = FirebaseDatabase.getInstance().reference.child("Story")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid)
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.hasChildren()) {
+                    ref.push().updateChildren(map)
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     //For story reading
@@ -96,8 +123,22 @@ class HomeFragment : Fragment() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     storyList?.clear()
                     for (dataSnapshot in snapshot.children) {
-                        val user: Story? = dataSnapshot.getValue(Story::class.java)
-                        storyList?.add(user!!)
+                        for (dataSnapshots in dataSnapshot.children) {
+                            val user: Story? = dataSnapshots.getValue(Story::class.java)
+                            if (user?.userId.equals(FirebaseAuth.getInstance().currentUser!!.uid) && !storyList!!.contains(
+                                    user!!
+                                )
+                            ) {
+                                storyList?.add(0, user)
+                            } else if (user?.userId.equals(FirebaseAuth.getInstance().currentUser!!.uid) && storyList!!.contains(
+                                    user!!
+                                )
+                            ) {
+                                //Do nothing
+                            } else {
+                                storyList?.add(user!!)
+                            }
+                        }
                     }
                     storyAdapter?.notifyDataSetChanged()
                 }

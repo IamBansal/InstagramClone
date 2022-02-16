@@ -9,13 +9,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.CommentActivity
 import com.example.instagramclone.FollowersActivity
 import com.example.instagramclone.R
-import com.example.instagramclone.fragments.ProfileFragment
 import com.example.instagramclone.fragments.ProfileUserFragment
 import com.example.instagramclone.model.Post
 import com.example.instagramclone.model.User
@@ -27,8 +25,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.hendraanggrian.appcompat.widget.SocialTextView
 import com.squareup.picasso.Picasso
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class PostAdapter(private var context: Context, private var mPosts: ArrayList<Post>) :
     RecyclerView.Adapter<PostAdapter.ViewHolder>() {

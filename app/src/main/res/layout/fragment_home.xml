@@ -21,13 +21,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:visibility="gone"
-                    android:layout_alignParentStart="true"
-                    android:src="@drawable/text" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -37,6 +30,15 @@
                     android:text="Instagram"
                     android:textColor="@color/black"
                     android:textSize="25sp" />
+
+                <ImageView
+                    android:id="@+id/addStory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/inbox"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_baseline_add_circle_outline_24" />
 
                 <ImageView
                     android:id="@+id/inbox"
@@ -72,7 +74,9 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewPosts"
-                android:layout_margin="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
