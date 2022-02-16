@@ -5,17 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".StoryShowActivity">
 
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:id="@+id/barStory"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:background="?android:attr/windowBackground"-->
-<!--        android:layout_height="wrap_content" >-->
-
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/toolbarStory"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:background="?android:attr/windowBackground"-->
-<!--            android:layout_height="wrap_content" >-->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:layout_alignParentTop="true"
+        android:id="@+id/progress"
+        android:indeterminate="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:id="@+id/llS"
@@ -40,10 +35,6 @@
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
-
-<!--        </androidx.appcompat.widget.Toolbar>-->
-
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
 
     <ImageView
         android:src="@drawable/log"
