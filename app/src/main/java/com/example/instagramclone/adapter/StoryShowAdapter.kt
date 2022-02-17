@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.R
 import com.example.instagramclone.model.Story
@@ -37,10 +38,23 @@ class StoryShowAdapter(private var context: Context, private var storyUser : Arr
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val story = storyUser[position]
         getUser(holder.profileS, holder.usernameSI, story.publisher.toString())
+
+        //To get story image.
+        FirebaseDatabase.getInstance().reference.child("Story").child(story.publisher.toString())
+            .child(story.storyId.toString()).addValueEventListener(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val item = snapshot.getValue(Story::class.java)
+                Picasso.get().load(item?.imageUrl).placeholder(R.drawable.ic_baseline_cloud_download_24).into(holder.postImage)
+            }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
         holder.pause.setOnClickListener {
 //            if (holder.pause.tag!! == "NotPaused"){
 //                holder.pause.tag = "Paused"
-//                Toast.makeText(context, "Paused", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Not yet implemented!\nSorry :(\nDrag to switch story.", Toast.LENGTH_SHORT).show()
 //            } else {
 //                Handler().postDelayed({
 //
@@ -52,6 +66,18 @@ class StoryShowAdapter(private var context: Context, private var storyUser : Arr
 
         holder.postImage.setOnClickListener {
             context.startActivity(Intent(context, HomePageActivity::class.java))
+        }
+
+        holder.profileS.setOnClickListener {
+            val intent = Intent(context, HomePageActivity::class.java)
+            intent.putExtra("publisherId", story.publisher)
+            context.startActivity(intent)
+        }
+
+        holder.usernameSI.setOnClickListener {
+            val intent = Intent(context, HomePageActivity::class.java)
+            intent.putExtra("publisherId", story.publisher)
+            context.startActivity(intent)
         }
 
     }
