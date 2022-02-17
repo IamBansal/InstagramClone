@@ -1,7 +1,7 @@
 package com.example.instagramclone
 
 import android.os.Bundle
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -30,7 +30,6 @@ class StoryShowActivity : AppCompatActivity() {
         recyclerView?.adapter = storyShowAdapter
 
         val userIdFromIntent = intent.getStringExtra("user")
-
         readStory(userIdFromIntent.toString())
 
     }
