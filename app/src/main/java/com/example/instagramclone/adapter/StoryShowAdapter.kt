@@ -49,9 +49,13 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
             .child(story.storyId.toString()).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val item = snapshot.getValue(Story::class.java)
-                    Picasso.get().load(item?.imageUrl)
-                        .placeholder(R.drawable.ic_baseline_cloud_download_24)
-                        .into(holder.postImage)
+                    if (item?.imageUrl.equals("")){
+                        holder.postImage.setImageResource(R.drawable.d)
+                    } else {
+                        Picasso.get().load(item?.imageUrl)
+                            .placeholder(R.drawable.ic_baseline_cloud_download_24)
+                            .into(holder.postImage)
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -82,18 +86,27 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
 
         //To delete the story
         holder.delete.setOnClickListener {
-            val alert = AlertDialog.Builder(context)
-            alert.setTitle("Story Delete Requested!!")
-                .setMessage("You sure you want to delete the story?")
-                .setPositiveButton("Yes, Delete"){_,_->
-                    FirebaseDatabase.getInstance().reference.child("Story").child(FirebaseAuth.getInstance().currentUser!!.uid)
-                        .child(story.storyId.toString()).removeValue()
-                    holder.delete.visibility = View.INVISIBLE
-                    Toast.makeText(context, "Story Deleted\nYou will see the story until you finish viewing it.", Toast.LENGTH_SHORT).show()
-                }
-                .setNegativeButton("No"){_,_-> holder.delete.visibility = View.INVISIBLE }
-                .create()
-                .show()
+            if (story.imageUrl.equals("")){
+                Toast.makeText(context, "Can't delete this one.\nIt will disappear on it's own if a new story is added.", Toast.LENGTH_SHORT).show()
+            } else {
+                val alert = AlertDialog.Builder(context)
+                alert.setTitle("Story Delete Requested!!")
+                    .setMessage("You sure you want to delete the story?")
+                    .setPositiveButton("Yes, Delete") { _, _ ->
+                        FirebaseDatabase.getInstance().reference.child("Story")
+                            .child(FirebaseAuth.getInstance().currentUser!!.uid)
+                            .child(story.storyId.toString()).removeValue()
+                        holder.delete.visibility = View.INVISIBLE
+                        Toast.makeText(
+                            context,
+                            "Story Deleted\nYou will see the story until you finish viewing it.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    .setNegativeButton("No") { _, _ -> holder.delete.visibility = View.INVISIBLE }
+                    .create()
+                    .show()
+            }
         }
 
         //To unfollow the user (story publisher)
@@ -111,6 +124,7 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
         }
 
         //To pause/unpause the story.
+        holder.pause.visibility = View.INVISIBLE
         holder.pause.setOnClickListener {
 //            if (holder.pause.tag!! == "NotPaused"){
 //                holder.pause.tag = "Paused"
@@ -162,11 +176,7 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
                         Picasso.get().load(user?.imageUrl)
                             .placeholder(R.drawable.ic_baseline_person_24).into(profile)
                     }
-                    if (user?.id.equals(FirebaseAuth.getInstance().currentUser!!.uid)) {
-                        username.text = "Your story"
-                    } else {
                         username.text = user?.Username
-                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {

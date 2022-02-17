@@ -4,8 +4,10 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -68,6 +70,7 @@ class StoryPostActivity : AppCompatActivity() {
                     map["publisher"] = FirebaseAuth.getInstance().currentUser!!.uid
 
                     ref.child(storyId.toString()).setValue(map)
+                    findViewById<RelativeLayout>(R.id.relativeLayout).visibility = View.GONE
                     pd.dismiss()
                     Toast.makeText(
                         this,

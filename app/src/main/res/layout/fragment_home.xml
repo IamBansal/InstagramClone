@@ -65,12 +65,47 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewStories"
-                android:layout_margin="5dp"
+            <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content" >
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
+                    android:padding="5dp"
+                    android:layout_margin="5sp"
+                    android:layout_height="wrap_content" >
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ciStoryHome"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/ic_baseline_person_24" />
+
+                    <TextView
+                        android:id="@+id/textStoryHome"
+                        android:textSize="10sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ciStoryHome"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="3dp"
+                        android:text="Your Story item"
+                        android:textColor="@color/black" />
+
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewStories"
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewPosts"

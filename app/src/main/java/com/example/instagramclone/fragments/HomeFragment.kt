@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,11 +18,14 @@ import com.example.instagramclone.adapter.PostAdapter
 import com.example.instagramclone.adapter.StoryAdapter
 import com.example.instagramclone.model.Post
 import com.example.instagramclone.model.Story
+import com.example.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,6 +60,8 @@ class HomeFragment : Fragment() {
     private var storyAdapter: StoryAdapter? = null
 
     private var addStory: ImageView? = null
+    private var profileStory: CircleImageView? = null
+    private var relativeLayout: RelativeLayout? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,6 +71,40 @@ class HomeFragment : Fragment() {
         val layout = inflater.inflate(R.layout.fragment_home, container, false)
 
         addStory = layout.findViewById(R.id.addStory)
+        profileStory = layout.findViewById(R.id.ciStoryHome)
+        relativeLayout = layout.findViewById(R.id.relativeLayout)
+
+        //to show profile
+        FirebaseDatabase.getInstance().reference.child("Users")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val userHere : User? = snapshot.getValue(User::class.java)
+                    if(userHere?.imageUrl.equals("default")){
+                        profileStory?.setImageResource(R.drawable.ic_baseline_person_24)
+                    } else {
+                        Picasso.get().load(userHere?.imageUrl).placeholder(R.drawable.ic_baseline_person_24).into(profileStory)
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+        //to check whether to show that dummy story item or not.
+        FirebaseDatabase.getInstance().reference.child("Story")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (!snapshot.exists()){
+                        relativeLayout?.visibility = View.VISIBLE
+                    } else {
+                        relativeLayout?.visibility = View.GONE
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+
 
         recyclerViewPosts = layout.findViewById(R.id.recyclerViewPosts)
         recyclerViewPosts?.setHasFixedSize(true)
