@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.instagramclone.PostActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.StoryPostActivity
 import com.example.instagramclone.adapter.PostAdapter
@@ -92,8 +91,8 @@ class HomeFragment : Fragment() {
         recyclerViewStories?.adapter = storyAdapter
 
         addStory?.setOnClickListener {
-            checkIfOnlyStory()
-//            startActivity(Intent(context, StoryPostActivity::class.java))
+//            checkIfOnlyStory()
+            startActivity(Intent(context, StoryPostActivity::class.java))
         }
 
         return layout
@@ -122,16 +121,21 @@ class HomeFragment : Fragment() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     storyList?.clear()
                     for (dataSnapshot in snapshot.children) {
+                        var count = 0;
                         for (dataSnapshots in dataSnapshot.children) {
-                            val story: Story? = dataSnapshots.getValue(Story::class.java)
-                            for (id in followingList!!) {
-                                if (story?.publisher!! == id) {
-                                    if (story.publisher == FirebaseAuth.getInstance().currentUser!!.uid) {
-                                        storyList?.add(0, story)
-                                    } else {
-                                        storyList?.add(story)
+                            //This while loop is for showing story only once in home.
+                            while (count < 1) {
+                                val story: Story? = dataSnapshots.getValue(Story::class.java)
+                                for (id in followingList!!) {
+                                    if (story?.publisher!! == id) {
+                                        if (story.publisher == FirebaseAuth.getInstance().currentUser!!.uid) {
+                                            storyList?.add(0, story)
+                                        } else {
+                                            storyList?.add(story)
+                                        }
                                     }
                                 }
+                                count++
                             }
                         }
                     }
@@ -143,36 +147,6 @@ class HomeFragment : Fragment() {
                 }
 
             })
-
-//        FirebaseDatabase.getInstance().reference.child("Story")
-//            .addValueEventListener(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    storyList?.clear()
-//                    for (dataSnapshot in snapshot.children) {
-//                        for (dataSnapshots in dataSnapshot.children) {
-//                            val user: Story? = dataSnapshots.getValue(Story::class.java)
-//                            if (user?.publisher.equals(FirebaseAuth.getInstance().currentUser!!.uid) && !storyList!!.contains(
-//                                    user!!
-//                                )
-//                            ) {
-//                                storyList?.add(0, user)
-//                            } else if (user?.publisher.equals(FirebaseAuth.getInstance().currentUser!!.uid) && storyList!!.contains(
-//                                    user!!
-//                                )
-//                            ) {
-//                                //Do nothing
-//                            } else {
-//                                storyList?.add(user!!)
-//                            }
-//                        }
-//                    }
-//                    storyAdapter?.notifyDataSetChanged()
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//                    TODO("Not yet implemented")
-//                }
-//            })
     }
 
     //For checking those whom the current user is following.

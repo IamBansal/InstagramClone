@@ -5,62 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".StoryShowActivity">
 
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/rvStory"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent" />-->
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:layout_alignParentTop="true"
-        android:id="@+id/progress"
-        android:indeterminate="true"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvStory"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-            <LinearLayout
-                android:id="@+id/llS"
-                android:orientation="horizontal"
-                android:layout_margin="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profileStory"
-                    android:layout_width="50dp"
-                    android:src="@drawable/ic_baseline_person_24"
-                    android:layout_height="50dp" />
-
-                <TextView
-                    android:id="@+id/usernameStory"
-                    android:text="AxtBansal"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10sp"
-                    android:textColor="@color/black"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <Button
-                    android:id="@+id/pauseStory"
-                    android:tag="NotPaused"
-                    android:textAllCaps="false"
-                    android:text="Pause Story"
-                    android:layout_marginStart="140dp"
-                    android:textColor="@color/black"
-                    android:backgroundTint="@color/white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-    <ImageView
-        android:id="@+id/ivStory"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/llS"
-        android:layout_marginStart="10sp"
-        android:layout_marginTop="10sp"
-        android:layout_marginEnd="10sp"
-        android:layout_marginBottom="10sp"
-        android:src="@drawable/log" />
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

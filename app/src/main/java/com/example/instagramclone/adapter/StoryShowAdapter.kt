@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.R
-import com.example.instagramclone.StoryShowActivity
 import com.example.instagramclone.model.Story
 import com.example.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -20,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import com.example.instagramclone.HomePageActivity
 
 class StoryShowAdapter(private var context: Context, private var storyUser : ArrayList<Story>) : RecyclerView.Adapter<StoryShowAdapter.ViewHolder>() {
 
@@ -37,6 +37,23 @@ class StoryShowAdapter(private var context: Context, private var storyUser : Arr
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val story = storyUser[position]
         getUser(holder.profileS, holder.usernameSI, story.publisher.toString())
+        holder.pause.setOnClickListener {
+//            if (holder.pause.tag!! == "NotPaused"){
+//                holder.pause.tag = "Paused"
+//                Toast.makeText(context, "Paused", Toast.LENGTH_SHORT).show()
+//            } else {
+//                Handler().postDelayed({
+//
+//                }, 5000)
+//                Toast.makeText(context, "UnPaused", Toast.LENGTH_SHORT).show()
+//                holder.pause.tag = "NotPaused"
+//            }
+        }
+
+        holder.postImage.setOnClickListener {
+            context.startActivity(Intent(context, HomePageActivity::class.java))
+        }
+
     }
 
     private fun getUser(profile: CircleImageView, username: TextView, userId : String) {
