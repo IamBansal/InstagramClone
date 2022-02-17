@@ -105,6 +105,10 @@ class HomeFragment : Fragment() {
                 }
             })
 
+        //To add story from dummy story item when no story is added.
+        relativeLayout?.setOnClickListener {
+            startActivity(Intent(context, StoryPostActivity::class.java))
+        }
 
         recyclerViewPosts = layout.findViewById(R.id.recyclerViewPosts)
         recyclerViewPosts?.setHasFixedSize(true)

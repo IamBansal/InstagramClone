@@ -73,9 +73,11 @@
                 <RelativeLayout
                     android:id="@+id/relativeLayout"
                     android:layout_width="wrap_content"
-                    android:visibility="gone"
                     android:padding="5dp"
-                    android:layout_margin="5sp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="-2dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_height="wrap_content" >
 
                     <de.hdodenhof.circleimageview.CircleImageView
@@ -87,14 +89,21 @@
 
                     <TextView
                         android:id="@+id/textStoryHome"
-                        android:textSize="10sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ciStoryHome"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="3dp"
-                        android:text="Your Story item"
-                        android:textColor="@color/black" />
+                        android:text="Your Story"
+                        android:textColor="@color/black"
+                        android:textSize="10sp" />
+
+                    <ImageView
+                        android:src="@drawable/ic_baseline_add_circle_24"
+                        android:layout_toEndOf="@id/ciStoryHome"
+                        android:layout_above="@id/textStoryHome"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp" />
 
                 </RelativeLayout>
 

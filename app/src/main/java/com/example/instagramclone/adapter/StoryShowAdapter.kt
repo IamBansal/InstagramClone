@@ -49,7 +49,7 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
             .child(story.storyId.toString()).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val item = snapshot.getValue(Story::class.java)
-                    if (item?.imageUrl.equals("")){
+                    if (item?.imageUrl.equals("")) {
                         holder.postImage.setImageResource(R.drawable.d)
                     } else {
                         Picasso.get().load(item?.imageUrl)
@@ -86,39 +86,41 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
 
         //To delete the story
         holder.delete.setOnClickListener {
-            if (story.imageUrl.equals("")){
-                Toast.makeText(context, "Can't delete this one.\nIt will disappear on it's own if a new story is added.", Toast.LENGTH_SHORT).show()
-            } else {
-                val alert = AlertDialog.Builder(context)
-                alert.setTitle("Story Delete Requested!!")
-                    .setMessage("You sure you want to delete the story?")
-                    .setPositiveButton("Yes, Delete") { _, _ ->
-                        FirebaseDatabase.getInstance().reference.child("Story")
-                            .child(FirebaseAuth.getInstance().currentUser!!.uid)
-                            .child(story.storyId.toString()).removeValue()
-                        holder.delete.visibility = View.INVISIBLE
-                        Toast.makeText(
-                            context,
-                            "Story Deleted\nYou will see the story until you finish viewing it.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    .setNegativeButton("No") { _, _ -> holder.delete.visibility = View.INVISIBLE }
-                    .create()
-                    .show()
-            }
+            val alert = AlertDialog.Builder(context)
+            alert.setTitle("Story Delete Requested!!")
+                .setMessage("You sure you want to delete the story?")
+                .setPositiveButton("Yes, Delete") { _, _ ->
+                    FirebaseDatabase.getInstance().reference.child("Story")
+                        .child(FirebaseAuth.getInstance().currentUser!!.uid)
+                        .child(story.storyId.toString()).removeValue()
+                    holder.delete.visibility = View.INVISIBLE
+                    Toast.makeText(
+                        context,
+                        "Story Deleted\nYou will see the story until you finish viewing it.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                .setNegativeButton("No") { _, _ -> holder.delete.visibility = View.INVISIBLE }
+                .create()
+                .show()
         }
 
         //To unfollow the user (story publisher)
         holder.unfollow.setOnClickListener {
-            FirebaseDatabase.getInstance().reference.child("Follow").child(FirebaseAuth.getInstance().currentUser!!.uid)
+            FirebaseDatabase.getInstance().reference.child("Follow")
+                .child(FirebaseAuth.getInstance().currentUser!!.uid)
                 .child("Following").child(story.publisher.toString()).removeValue()
 
             FirebaseDatabase.getInstance().reference.child("Follow")
                 .child(story.publisher.toString())
-                .child("Followers").child(FirebaseAuth.getInstance().currentUser!!.uid).removeValue()
+                .child("Followers").child(FirebaseAuth.getInstance().currentUser!!.uid)
+                .removeValue()
 
-            Toast.makeText(context, "User Unfollowed\nYou will see the story until you finish viewing it.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "User Unfollowed\nYou will see the story until you finish viewing it.",
+                Toast.LENGTH_SHORT
+            ).show()
             holder.unfollow.visibility = View.GONE
 
         }
@@ -176,7 +178,7 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
                         Picasso.get().load(user?.imageUrl)
                             .placeholder(R.drawable.ic_baseline_person_24).into(profile)
                     }
-                        username.text = user?.Username
+                    username.text = user?.Username
                 }
 
                 override fun onCancelled(error: DatabaseError) {
