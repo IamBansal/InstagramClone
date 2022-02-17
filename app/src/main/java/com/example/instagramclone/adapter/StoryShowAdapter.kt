@@ -88,8 +88,10 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
                 .setPositiveButton("Yes, Delete"){_,_->
                     FirebaseDatabase.getInstance().reference.child("Story").child(FirebaseAuth.getInstance().currentUser!!.uid)
                         .child(story.storyId.toString()).removeValue()
+                    holder.delete.visibility = View.INVISIBLE
+                    Toast.makeText(context, "Story Deleted\nYou will see the story until you finish viewing it.", Toast.LENGTH_SHORT).show()
                 }
-                .setNegativeButton("No"){_,_->}
+                .setNegativeButton("No"){_,_-> holder.delete.visibility = View.INVISIBLE }
                 .create()
                 .show()
         }
@@ -102,9 +104,13 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
             FirebaseDatabase.getInstance().reference.child("Follow")
                 .child(story.publisher.toString())
                 .child("Followers").child(FirebaseAuth.getInstance().currentUser!!.uid).removeValue()
+
+            Toast.makeText(context, "User Unfollowed\nYou will see the story until you finish viewing it.", Toast.LENGTH_SHORT).show()
+            holder.unfollow.visibility = View.GONE
+
         }
 
-        //to pause/unpause the story.
+        //To pause/unpause the story.
         holder.pause.setOnClickListener {
 //            if (holder.pause.tag!! == "NotPaused"){
 //                holder.pause.tag = "Paused"
