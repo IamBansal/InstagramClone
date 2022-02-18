@@ -10,9 +10,13 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.instagramclone.*
+import com.example.instagramclone.adapter.HighlightAdapter
 import com.example.instagramclone.adapter.PhotoAdapter
+import com.example.instagramclone.model.Highlight
 import com.example.instagramclone.model.Post
+import com.example.instagramclone.model.Story
 import com.example.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -49,29 +53,31 @@ class ProfileFragment : Fragment() {
     }
 
     //Widgets used in fragment
-    private var usernameProfile : TextView? = null
-    private var nameProfile : TextView? = null
-    private var bioProfile : TextView? = null
-    private var imagePProfile : CircleImageView? = null
-    private var postsProfile : TextView? = null
-    private var followersProfile : TextView? = null
-    private var followingsProfile : TextView? = null
-    private var options : ImageView? = null
-    private var myPictures : ImageButton? = null
-    private var savedPictures : ImageButton? = null
-    private var editProfile : Button? = null
-    private var recyclerViewMyPictures : RecyclerView? = null
-    private var photoAdapter : PhotoAdapter? = null
-    private var myPhotoList : ArrayList<Post>? = null
-    private var recyclerViewSavedPics : RecyclerView? = null
-    private var photoAdapterSaves : PhotoAdapter? = null
-    private var mySavedPhotoList : ArrayList<Post>? = null
-    private var firebaseUser : FirebaseUser? = null
-    private var profileId : String? = null
+    private var usernameProfile: TextView? = null
+    private var nameProfile: TextView? = null
+    private var bioProfile: TextView? = null
+    private var imagePProfile: CircleImageView? = null
+    private var postsProfile: TextView? = null
+    private var followersProfile: TextView? = null
+    private var followingsProfile: TextView? = null
+    private var options: ImageView? = null
+    private var myPictures: ImageButton? = null
+    private var savedPictures: ImageButton? = null
+    private var editProfile: Button? = null
+    private var recyclerViewMyPictures: RecyclerView? = null
+    private var photoAdapter: PhotoAdapter? = null
+    private var myPhotoList: ArrayList<Post>? = null
+    private var recyclerViewSavedPics: RecyclerView? = null
+    private var photoAdapterSaves: PhotoAdapter? = null
+    private var mySavedPhotoList: ArrayList<Post>? = null
+    private var firebaseUser: FirebaseUser? = null
+    private var profileId: String? = null
 
-    private var relativeLayout : RelativeLayout? = null
-    private var recyclerViewHighlight : RecyclerView? = null
+    private var relativeLayout: RelativeLayout? = null
     private var profileHighlight: CircleImageView? = null
+    private var recyclerViewHighlight: RecyclerView? = null
+    private var highlightAdapter: HighlightAdapter? = null
+    private var highlightList: ArrayList<Highlight>? = null
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -96,7 +102,7 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val layout =  inflater.inflate(R.layout.fragment_profile, container, false)
+        val layout = inflater.inflate(R.layout.fragment_profile, container, false)
 
         firebaseUser = FirebaseAuth.getInstance().currentUser
         profileId = firebaseUser!!.uid
@@ -130,11 +136,19 @@ class ProfileFragment : Fragment() {
         recyclerViewSavedPics?.layoutManager = GridLayoutManager(requireContext(), 3)
         recyclerViewSavedPics?.adapter = photoAdapterSaves
 
+        highlightList = ArrayList()
+        highlightAdapter = HighlightAdapter(requireContext(), highlightList!!)
+        recyclerViewHighlight?.setHasFixedSize(true)
+        recyclerViewHighlight?.layoutManager =
+            StaggeredGridLayoutManager(1, LinearLayout.HORIZONTAL)
+        recyclerViewHighlight?.adapter = highlightAdapter
+
         userInfo()
         getFollowersAndFollowings()
         getPostCount()
         myPhotos()
         getSavedPosts()
+        readHighlights()
 
         if (profileId.equals(firebaseUser?.uid)) {
             editProfile?.text = "Edit Profile"
@@ -148,21 +162,25 @@ class ProfileFragment : Fragment() {
 
         editProfile?.setOnClickListener {
             val btnText = editProfile?.text.toString()
-            if (btnText == "Edit Profile"){
+            if (btnText == "Edit Profile") {
                 startActivity(Intent(context, EditProfileActivity::class.java))
             } else {
                 //To follow if it shows follow.
-                if (btnText == "Follow"){
-                    FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid)
+                if (btnText == "Follow") {
+                    FirebaseDatabase.getInstance().reference.child("Follow")
+                        .child(firebaseUser!!.uid)
                         .child("Following").child(profileId.toString()).setValue(true)
-                    FirebaseDatabase.getInstance().reference.child("Follow").child(profileId.toString())
+                    FirebaseDatabase.getInstance().reference.child("Follow")
+                        .child(profileId.toString())
                         .child("Followers").child(firebaseUser!!.uid).setValue(true)
                 }
                 //to unfollow if it shows following
                 else {
-                    FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid)
+                    FirebaseDatabase.getInstance().reference.child("Follow")
+                        .child(firebaseUser!!.uid)
                         .child("Following").child(profileId.toString()).removeValue()
-                    FirebaseDatabase.getInstance().reference.child("Follow").child(profileId.toString())
+                    FirebaseDatabase.getInstance().reference.child("Follow")
+                        .child(profileId.toString())
                         .child("Followers").child(firebaseUser!!.uid).removeValue()
                 }
             }
@@ -199,90 +217,112 @@ class ProfileFragment : Fragment() {
             startActivity(Intent(context, AddHighlightActivity::class.java))
         }
 
-        //To check whether to show that dummy highlight item or not.
-        FirebaseDatabase.getInstance().reference.child("Highlight")
-            .child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object :ValueEventListener{
+        return layout
+    }
+
+    //to read the highlights.
+    private fun readHighlights() {
+
+        FirebaseDatabase.getInstance().reference.child("Highlight").child(firebaseUser!!.uid)
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (!snapshot.exists()){
-                        relativeLayout?.visibility = View.VISIBLE
-                    } else {
-                        relativeLayout?.visibility = View.GONE
+                    highlightList?.clear()
+                    for (dataSnapshot in snapshot.children) {
+                        var count = 0;
+                        for (dataSnapshots in dataSnapshot.children) {
+                            //This while loop is for showing story only once in home.
+                            while (count < 1) {
+                                val highlight: Highlight? =
+                                    dataSnapshots.getValue(Highlight::class.java)
+                                highlightList?.add(highlight!!)
+                                count++
+                            }
+                        }
                     }
+                    highlightAdapter?.notifyDataSetChanged()
                 }
+
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }
+
             })
 
-        return layout
     }
 
     //to get the saved posts
     private fun getSavedPosts() {
         val savedIds = ArrayList<String>()
-        FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid).addValueEventListener(object :ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                //To get all posts in saved.
-                for (dataSnaps in snapshot.children){
-                    savedIds.add(dataSnaps.key.toString())
+        FirebaseDatabase.getInstance().reference.child("Saves").child(firebaseUser!!.uid)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    //To get all posts in saved.
+                    for (dataSnaps in snapshot.children) {
+                        savedIds.add(dataSnaps.key.toString())
+                    }
+
+                    //To check which post to show now.
+                    FirebaseDatabase.getInstance().reference.child("Posts")
+                        .addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(snapshot1: DataSnapshot) {
+                                mySavedPhotoList?.clear()
+                                for (snap in snapshot1.children) {
+                                    val post = snap.getValue(Post::class.java)
+                                    for (id in savedIds) {
+                                        if (post?.postId.equals(id)) {
+                                            mySavedPhotoList?.add(post!!)
+                                        }
+                                    }
+                                }
+                                photoAdapterSaves?.notifyDataSetChanged()
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+                        })
                 }
 
-                //To check which post to show now.
-                FirebaseDatabase.getInstance().reference.child("Posts").addValueEventListener(object :ValueEventListener{
-                    override fun onDataChange(snapshot1: DataSnapshot) {
-                        mySavedPhotoList?.clear()
-                        for (snap in snapshot1.children){
-                            val post = snap.getValue(Post::class.java)
-                            for (id in savedIds){
-                                if (post?.postId.equals(id)){
-                                    mySavedPhotoList?.add(post!!)
-                                }
-                            }
-                        }
-                        photoAdapterSaves?.notifyDataSetChanged()
-                    }
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-                })
-            }
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
     }
 
     //To get current user's posts.
     private fun myPhotos() {
-        FirebaseDatabase.getInstance().reference.child("Posts").addValueEventListener(object :ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                myPhotoList?.clear()
-                for (dataSnapshot in snapshot.children){
-                    val post = dataSnapshot.getValue(Post::class.java)
-                    if(post?.publisher.equals(profileId)){
-                        myPhotoList?.add(post!!)
+        FirebaseDatabase.getInstance().reference.child("Posts")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    myPhotoList?.clear()
+                    for (dataSnapshot in snapshot.children) {
+                        val post = dataSnapshot.getValue(Post::class.java)
+                        if (post?.publisher.equals(profileId)) {
+                            myPhotoList?.add(post!!)
+                        }
                     }
+                    Collections.reverse(myPhotoList)
+                    photoAdapter?.notifyDataSetChanged()
                 }
-                Collections.reverse(myPhotoList)
-                photoAdapter?.notifyDataSetChanged()
-            }
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
     }
 
     //to check if current user is following the user or not.
     private fun checkFollowingStatus() {
         FirebaseDatabase.getInstance().reference.child("Follow").child(firebaseUser!!.uid)
-            .child("Following").addValueEventListener(object :ValueEventListener{
+            .child("Following").addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.child(profileId.toString()).exists()){
+                    if (snapshot.child(profileId.toString()).exists()) {
                         editProfile?.text = "Following"
                     } else {
                         editProfile?.text = "Follow"
                     }
                 }
+
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }
@@ -293,45 +333,49 @@ class ProfileFragment : Fragment() {
 
     //To get post count
     private fun getPostCount() {
-        FirebaseDatabase.getInstance().reference.child("Posts").addValueEventListener(object :ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                var count = 0
-                for (dataSnapshot in snapshot.children) {
-                    val post = dataSnapshot.getValue(Post::class.java)
-                    if (post?.publisher.equals(profileId)){
-                        count++
+        FirebaseDatabase.getInstance().reference.child("Posts")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    var count = 0
+                    for (dataSnapshot in snapshot.children) {
+                        val post = dataSnapshot.getValue(Post::class.java)
+                        if (post?.publisher.equals(profileId)) {
+                            count++
+                        }
                     }
+                    postsProfile?.text = count.toString()
                 }
-                postsProfile?.text = count.toString()
-            }
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
     }
 
     //to get number of followers and followings.
     private fun getFollowersAndFollowings() {
         val ref = FirebaseDatabase.getInstance().reference.child("Follow").child(profileId!!)
-            //To get number of followers.
-            ref.child("Followers").addValueEventListener(object :ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    followersProfile?.text = snapshot.childrenCount.toString()
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
+        //To get number of followers.
+        ref.child("Followers").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                followersProfile?.text = snapshot.childrenCount.toString()
+            }
 
-            //To get number of followings.
-            ref.child("Following").addValueEventListener(object :ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    followingsProfile?.text = snapshot.childrenCount.toString()
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
+        //To get number of followings.
+        ref.child("Following").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                followingsProfile?.text = snapshot.childrenCount.toString()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
 
 
     }
@@ -339,23 +383,25 @@ class ProfileFragment : Fragment() {
     //To get userinfo
     private fun userInfo() {
 
-        FirebaseDatabase.getInstance().reference.child("Users").child(profileId!!).addValueEventListener(object :ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val user = snapshot.getValue(User::class.java)
-                if (user?.imageUrl.equals("default")) {
-                    imagePProfile?.setImageResource(R.drawable.ic_baseline_person_24)
-                } else {
-                    Picasso.get().load(user?.imageUrl).placeholder(R.drawable.ic_baseline_person_24).into(imagePProfile)
+        FirebaseDatabase.getInstance().reference.child("Users").child(profileId!!)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(User::class.java)
+                    if (user?.imageUrl.equals("default")) {
+                        imagePProfile?.setImageResource(R.drawable.ic_baseline_person_24)
+                    } else {
+                        Picasso.get().load(user?.imageUrl)
+                            .placeholder(R.drawable.ic_baseline_person_24).into(imagePProfile)
+                    }
+                    usernameProfile?.text = user?.Username
+                    nameProfile?.text = user?.Name
+                    bioProfile?.text = user?.Bio
                 }
-                usernameProfile?.text = user?.Username
-                nameProfile?.text = user?.Name
-                bioProfile?.text = user?.Bio
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
 
     }
 
