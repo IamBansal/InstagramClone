@@ -156,6 +156,23 @@ class ProfileFragment : Fragment() {
             checkFollowingStatus()
         }
 
+        //To view story from profile
+        imagePProfile?.setOnClickListener {
+            FirebaseDatabase.getInstance().reference.child("Story").child(profileId!!).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.hasChildren()) {
+                        val intent = Intent(context, StoryShowActivity::class.java)
+                        intent.putExtra("user", profileId)
+                        startActivity(intent)
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+        }
+
         options?.setOnClickListener {
             startActivity(Intent(context, OptionsActivity::class.java))
         }

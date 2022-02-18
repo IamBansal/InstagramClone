@@ -11,10 +11,7 @@ import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.instagramclone.EditProfileActivity
-import com.example.instagramclone.FollowersActivity
-import com.example.instagramclone.OptionsActivity
-import com.example.instagramclone.R
+import com.example.instagramclone.*
 import com.example.instagramclone.adapter.HighlightAdapter
 import com.example.instagramclone.adapter.PhotoAdapter
 import com.example.instagramclone.model.Highlight
@@ -138,6 +135,23 @@ class ProfileUserFragment : Fragment() {
             editProfile?.text = "Edit Profile"
         } else {
             checkFollowingStatus()
+        }
+
+        //To view story from profile
+        imagePProfile?.setOnClickListener {
+            FirebaseDatabase.getInstance().reference.child("Story").child(profileId!!).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.hasChildren()) {
+                        val intent = Intent(context, StoryShowActivity::class.java)
+                        intent.putExtra("user", profileId)
+                        startActivity(intent)
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+
         }
 
         options?.setOnClickListener {
