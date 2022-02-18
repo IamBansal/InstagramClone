@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InstagramClone">
         <activity
+            android:name=".HIghlightShowActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddHighlightActivity"
             android:exported="false" />
         <activity

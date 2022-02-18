@@ -7,15 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.instagramclone.HIghlightShowActivity
 import com.example.instagramclone.R
-import com.example.instagramclone.StoryShowActivity
 import com.example.instagramclone.model.Highlight
-import com.example.instagramclone.model.User
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -34,12 +28,13 @@ class HighlightAdapter(private var context: Context, private var highlights : Ar
         Picasso.get().load(highlight.imageUrl).placeholder(R.drawable.ic_baseline_cloud_download_24).into(holder.image)
         holder.usernameS.text = highlight.highlightText
 
-//        holder.itemView.setOnClickListener{
-//            val intent = Intent(context, StoryShowActivity::class.java)
-//            intent.putExtra("userH", highlight.publisher.toString())
-//            intent.putExtra("highlightId", highlight.highlightId.toString())
-//            context.startActivity(intent)
-//        }
+        holder.itemView.setOnClickListener{
+            val intent = Intent(context, HIghlightShowActivity::class.java)
+            intent.putExtra("userH", highlight.publisher.toString())
+            intent.putExtra("highlightId", highlight.highlightId.toString())
+            intent.putExtra("highlightText", highlight.highlightText.toString())
+            context.startActivity(intent)
+        }
 
     }
 

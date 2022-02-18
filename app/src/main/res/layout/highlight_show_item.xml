@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HIghlightShowActivity">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:indeterminate="true" />
+
+    <RelativeLayout
+        android:id="@+id/llS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="2dp"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileHItem"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_baseline_person_24" />
+
+        <TextView
+            android:id="@+id/usernameHItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10sp"
+            android:layout_toEndOf="@id/profileHItem"
+            android:text="AxtBansal"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/pauseHItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="90dp"
+            android:layout_marginEnd="20dp"
+            android:layout_toStartOf="@id/HItemOptions"
+            android:backgroundTint="@color/white"
+            android:text="Pause Story"
+            android:textAllCaps="false"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/HItemOptions"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5sp"
+            android:src="@drawable/ic_baseline_more_vert_24" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/llMoreH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llS"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0sp"
+        android:layout_marginEnd="10sp"
+        android:backgroundTint="@color/white"
+        android:orientation="vertical"
+        android:outlineProvider="background"
+        android:tag="Gone"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/unfollowMoreH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5sp"
+            android:layout_marginBottom="8sp"
+            android:tag="Gone"
+            android:text="Unfollow user"
+            android:textColor="@color/black"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/deleteHighlight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5sp"
+            android:tag="Gone"
+            android:text="Delete Highlight"
+            android:textColor="@color/black"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/ivhItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/llS"
+        android:layout_marginStart="10sp"
+        android:layout_marginTop="20sp"
+        android:layout_marginEnd="10sp"
+        android:layout_marginBottom="10sp"
+        android:src="@drawable/log" />
+
+</RelativeLayout>
