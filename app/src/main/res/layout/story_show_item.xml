@@ -51,6 +51,17 @@
             android:textAllCaps="false"
             android:textColor="@color/black" />
 
+
+        <TextView
+            android:id="@+id/addHighlight"
+            android:clickable="true"
+            android:layout_centerInParent="true"
+            android:textColor="@color/black"
+            android:layout_marginStart="5sp"
+            android:text="Highlight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <ImageView
             android:id="@+id/StoryItemOptions"
             android:layout_width="30dp"

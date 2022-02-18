@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
+import com.example.instagramclone.AddHighlightActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.model.Story
 import com.example.instagramclone.model.User
@@ -30,6 +31,7 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
         val pause: Button = itemView.findViewById(R.id.pauseStoryItem)
         val more: ImageView = itemView.findViewById(R.id.StoryItemOptions)
         val delete: TextView = itemView.findViewById(R.id.deleteStory)
+        val highlight: TextView = itemView.findViewById(R.id.addHighlight)
         val unfollow: TextView = itemView.findViewById(R.id.unfollowMoreStory)
         val ll: LinearLayout = itemView.findViewById(R.id.llMoreStory)
     }
@@ -82,6 +84,20 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
                 holder.ll.visibility = View.INVISIBLE
                 holder.ll.tag = "Gone"
             }
+        }
+
+        //To decide whether to show highlight option or not.
+        if (story.publisher.equals(FirebaseAuth.getInstance().currentUser!!.uid)){
+            holder.highlight.visibility = View.VISIBLE
+        } else {
+            holder.highlight.visibility = View.GONE
+        }
+
+        holder.highlight.setOnClickListener {
+            val intent = Intent(context, AddHighlightActivity::class.java)
+            intent.putExtra("storyIdH", story.storyId)
+            intent.putExtra("storyImageUrl", story.imageUrl)
+            context.startActivity(intent)
         }
 
         //To delete the story

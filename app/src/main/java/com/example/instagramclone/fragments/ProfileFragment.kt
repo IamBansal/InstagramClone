@@ -7,16 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.instagramclone.EditProfileActivity
-import com.example.instagramclone.FollowersActivity
-import com.example.instagramclone.OptionsActivity
-import com.example.instagramclone.R
+import com.example.instagramclone.*
 import com.example.instagramclone.adapter.PhotoAdapter
 import com.example.instagramclone.model.Post
 import com.example.instagramclone.model.User
@@ -75,6 +69,10 @@ class ProfileFragment : Fragment() {
     private var firebaseUser : FirebaseUser? = null
     private var profileId : String? = null
 
+    private var relativeLayout : RelativeLayout? = null
+    private var recyclerViewHighlight : RecyclerView? = null
+    private var profileHighlight: CircleImageView? = null
+
     override fun onDestroyView() {
         super.onDestroyView()
         firebaseUser = FirebaseAuth.getInstance().currentUser
@@ -116,6 +114,9 @@ class ProfileFragment : Fragment() {
         editProfile = layout.findViewById(R.id.btnEditProfile)
         recyclerViewMyPictures = layout.findViewById(R.id.recyclerviewMyPics)
         recyclerViewSavedPics = layout.findViewById(R.id.recyclerviewSaved)
+        recyclerViewHighlight = layout.findViewById(R.id.recyclerViewHighlight)
+        profileHighlight = layout.findViewById(R.id.addHighlightProfile)
+        relativeLayout = layout.findViewById(R.id.relativeLayoutHighlight)
 
         myPhotoList = ArrayList()
         photoAdapter = PhotoAdapter(requireContext(), myPhotoList!!)
@@ -193,6 +194,25 @@ class ProfileFragment : Fragment() {
             intent.putExtra("title", "Followings")
             startActivity(intent)
         }
+
+        relativeLayout?.setOnClickListener {
+            startActivity(Intent(context, AddHighlightActivity::class.java))
+        }
+
+        //To check whether to show that dummy highlight item or not.
+        FirebaseDatabase.getInstance().reference.child("Highlight")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (!snapshot.exists()){
+                        relativeLayout?.visibility = View.VISIBLE
+                    } else {
+                        relativeLayout?.visibility = View.GONE
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
 
         return layout
     }
