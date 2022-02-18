@@ -7,17 +7,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.instagramclone.EditProfileActivity
 import com.example.instagramclone.FollowersActivity
 import com.example.instagramclone.OptionsActivity
 import com.example.instagramclone.R
+import com.example.instagramclone.adapter.HighlightAdapter
 import com.example.instagramclone.adapter.PhotoAdapter
+import com.example.instagramclone.model.Highlight
 import com.example.instagramclone.model.Post
 import com.example.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -74,6 +74,9 @@ class ProfileUserFragment : Fragment() {
     private var mySavedPhotoList : ArrayList<Post>? = null
     private var firebaseUser : FirebaseUser? = null
     private var profileId : String? = null
+    private var recyclerViewHighlight: RecyclerView? = null
+    private var highlightAdapter: HighlightAdapter? = null
+    private var highlightList: ArrayList<Highlight>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -103,6 +106,7 @@ class ProfileUserFragment : Fragment() {
         editProfile = layout.findViewById(R.id.btnEditProfile)
         recyclerViewMyPictures = layout.findViewById(R.id.recyclerviewMyPics)
         recyclerViewSavedPics = layout.findViewById(R.id.recyclerviewSaved)
+        recyclerViewHighlight = layout.findViewById(R.id.recyclerViewHighlightUser)
 
         myPhotoList = ArrayList()
         photoAdapter = PhotoAdapter(requireContext(), myPhotoList!!)
@@ -116,11 +120,19 @@ class ProfileUserFragment : Fragment() {
         recyclerViewSavedPics?.layoutManager = GridLayoutManager(requireContext(), 3)
         recyclerViewSavedPics?.adapter = photoAdapterSaves
 
+        highlightList = ArrayList()
+        highlightAdapter = HighlightAdapter(requireContext(), highlightList!!)
+        recyclerViewHighlight?.setHasFixedSize(true)
+        recyclerViewHighlight?.layoutManager =
+            StaggeredGridLayoutManager(1, LinearLayout.HORIZONTAL)
+        recyclerViewHighlight?.adapter = highlightAdapter
+
         userInfo()
         getFollowersAndFollowings()
         getPostCount()
         myPhotos()
         getSavedPosts()
+        readHighlights()
 
         if (profileId.equals(firebaseUser?.uid)) {
             editProfile?.text = "Edit Profile"
@@ -184,6 +196,36 @@ class ProfileUserFragment : Fragment() {
         }
 
         return layout
+    }
+
+    //To read the highlights.
+    private fun readHighlights() {
+
+        FirebaseDatabase.getInstance().reference.child("Highlight").child(profileId!!)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    highlightList?.clear()
+                    for (dataSnapshot in snapshot.children) {
+                        var count = 0;
+                        for (dataSnapshots in dataSnapshot.children) {
+                            //This while loop is for showing story only once in home.
+                            while (count < 1) {
+                                val highlight: Highlight? =
+                                    dataSnapshots.getValue(Highlight::class.java)
+                                highlightList?.add(highlight!!)
+                                count++
+                            }
+                        }
+                    }
+                    highlightAdapter?.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+
     }
 
     //To add notification on following.
