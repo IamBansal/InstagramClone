@@ -60,6 +60,7 @@ class HomeFragment : Fragment() {
     private var storyAdapter: StoryAdapter? = null
 
     private var addStory: ImageView? = null
+    private var inbox: ImageView? = null
     private var profileStory: CircleImageView? = null
     private var relativeLayout: RelativeLayout? = null
 
@@ -71,10 +72,11 @@ class HomeFragment : Fragment() {
         val layout = inflater.inflate(R.layout.fragment_home, container, false)
 
         addStory = layout.findViewById(R.id.addStory)
+        inbox = layout.findViewById(R.id.inbox)
         profileStory = layout.findViewById(R.id.ciStoryHome)
         relativeLayout = layout.findViewById(R.id.relativeLayout)
 
-        //to show profile
+        //To show profile
         FirebaseDatabase.getInstance().reference.child("Users")
             .child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object :ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -90,7 +92,7 @@ class HomeFragment : Fragment() {
                 }
             })
 
-        //to check whether to show that dummy story item or not.
+        //To check whether to show that dummy story item or not.
         FirebaseDatabase.getInstance().reference.child("Story")
             .child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object :ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -137,6 +139,10 @@ class HomeFragment : Fragment() {
         addStory?.setOnClickListener {
 //            checkIfOnlyStory()
             startActivity(Intent(context, StoryPostActivity::class.java))
+        }
+
+        inbox?.setOnClickListener {
+            Toast.makeText(context, "Inbox not yet implemented buddy!\nWorking on it :)", Toast.LENGTH_SHORT).show()
         }
 
         return layout

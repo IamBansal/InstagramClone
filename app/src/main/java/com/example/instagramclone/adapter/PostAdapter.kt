@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.CommentActivity
@@ -87,6 +88,10 @@ class PostAdapter(private var context: Context, private var mPosts: ArrayList<Po
         noOfLikes(post.postId.toString(), holder.noOfLikes)
         getNumberOfComments(post.postId.toString(), holder.noOfComments)
         isSaved(post.postId.toString(), holder.save)
+
+        holder.share.setOnClickListener {
+            Toast.makeText(context, "Share not yet implemented buddy!\nWorking on it :)", Toast.LENGTH_SHORT).show()
+        }
 
         //To like or unlike a post.
         holder.like.setOnClickListener {
