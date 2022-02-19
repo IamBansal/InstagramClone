@@ -30,8 +30,9 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
         val profileS: CircleImageView = itemView.findViewById(R.id.profileStoryItem)
         val pause: Button = itemView.findViewById(R.id.pauseStoryItem)
         val more: ImageView = itemView.findViewById(R.id.StoryItemOptions)
+        val deleteImage: ImageView = itemView.findViewById(R.id.StoryItemOptionsDelete)
         val delete: TextView = itemView.findViewById(R.id.deleteStory)
-        val highlight: TextView = itemView.findViewById(R.id.addHighlight)
+        val highlight: ImageView = itemView.findViewById(R.id.addHighlight)
         val unfollow: TextView = itemView.findViewById(R.id.unfollowMoreStory)
         val ll: LinearLayout = itemView.findViewById(R.id.llMoreStory)
     }
@@ -67,19 +68,10 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
 
         //To show options on clicking on more.
         holder.more.setOnClickListener {
-
             if (holder.ll.tag.equals("Gone")) {
                 holder.ll.visibility = View.VISIBLE
                 holder.ll.tag = "Visible"
-
-                if (story.publisher.equals(FirebaseAuth.getInstance().currentUser!!.uid)) {
-                    holder.delete.visibility = View.VISIBLE
-                    holder.unfollow.visibility = View.GONE
-                } else {
-                    holder.delete.visibility = View.GONE
-                    holder.unfollow.visibility = View.VISIBLE
-                }
-
+                holder.unfollow.visibility = View.VISIBLE
             } else {
                 holder.ll.visibility = View.INVISIBLE
                 holder.ll.tag = "Gone"
@@ -87,10 +79,14 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
         }
 
         //To decide whether to show highlight option or not.
-        if (story.publisher.equals(FirebaseAuth.getInstance().currentUser!!.uid)){
+        if (story.publisher.equals(FirebaseAuth.getInstance().currentUser!!.uid)) {
             holder.highlight.visibility = View.VISIBLE
+            holder.more.visibility = View.GONE
+            holder.deleteImage.visibility = View.VISIBLE
         } else {
             holder.highlight.visibility = View.GONE
+            holder.more.visibility = View.VISIBLE
+            holder.deleteImage.visibility = View.GONE
         }
 
         holder.highlight.setOnClickListener {
@@ -101,7 +97,7 @@ class StoryShowAdapter(private var context: Context, private var storyUser: Arra
         }
 
         //To delete the story
-        holder.delete.setOnClickListener {
+        holder.deleteImage.setOnClickListener {
             val alert = AlertDialog.Builder(context)
             alert.setTitle("Story Delete Requested!!")
                 .setMessage("You sure you want to delete the story?")

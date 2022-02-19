@@ -31,6 +31,7 @@ class HIghlightShowAdapter(
         val profileS: CircleImageView = itemView.findViewById(R.id.profileHItem)
         val pause: Button = itemView.findViewById(R.id.pauseHItem)
         val more: ImageView = itemView.findViewById(R.id.HItemOptions)
+        val deleteImage: ImageView = itemView.findViewById(R.id.HItemOptionsDelete)
         val delete: TextView = itemView.findViewById(R.id.deleteHighlight)
         val unfollow: TextView = itemView.findViewById(R.id.unfollowMoreH)
         val ll: LinearLayout = itemView.findViewById(R.id.llMoreH)
@@ -72,23 +73,23 @@ class HIghlightShowAdapter(
             if (holder.ll.tag.equals("Gone")) {
                 holder.ll.visibility = View.VISIBLE
                 holder.ll.tag = "Visible"
-
-                if (highlight.publisher.equals(FirebaseAuth.getInstance().currentUser!!.uid)) {
-                    holder.delete.visibility = View.VISIBLE
-                    holder.unfollow.visibility = View.GONE
-                } else {
-                    holder.delete.visibility = View.GONE
-                    holder.unfollow.visibility = View.VISIBLE
-                }
-
+                holder.unfollow.visibility = View.VISIBLE
             } else {
                 holder.ll.visibility = View.INVISIBLE
                 holder.ll.tag = "Gone"
             }
         }
 
+        if (highlight.publisher.equals(FirebaseAuth.getInstance().currentUser!!.uid)) {
+            holder.more.visibility = View.GONE
+            holder.deleteImage.visibility = View.VISIBLE
+        } else {
+            holder.more.visibility = View.VISIBLE
+            holder.deleteImage.visibility = View.GONE
+        }
+
         //To delete the highlight
-        holder.delete.setOnClickListener {
+        holder.deleteImage.setOnClickListener {
             val alert = AlertDialog.Builder(context)
             alert.setTitle("Highlight Delete Requested!!")
                 .setMessage("You sure you want to delete the highlight?")
