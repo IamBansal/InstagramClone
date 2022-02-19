@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.ChatActivity
 import com.example.instagramclone.R
+import com.example.instagramclone.fragments.ProfileUserFragment
 import com.example.instagramclone.model.Inbox
 import com.example.instagramclone.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -40,6 +42,13 @@ class InboxAdapter(private var context: Context, private var inbox : ArrayList<I
             intent.putExtra("toUserId", inboxChat.toUserId.toString())
             context.startActivity(intent)
         }
+
+//        holder.profileInbox.setOnClickListener {
+//            context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
+//                .putString("profileID", inboxChat.toUserId).apply()
+//            (context as FragmentActivity).supportFragmentManager.beginTransaction()
+//                .replace(R.id.fragment_container, ProfileUserFragment()).commit()
+//        }
 
         holder.itemView.setOnLongClickListener {
         val alert = AlertDialog.Builder(context)

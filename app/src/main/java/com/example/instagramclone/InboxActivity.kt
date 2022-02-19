@@ -2,6 +2,8 @@ package com.example.instagramclone
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.adapter.InboxAdapter
@@ -17,6 +19,7 @@ import com.google.firebase.database.ValueEventListener
 class InboxActivity : AppCompatActivity() {
 
     private var recyclerViewInbox: RecyclerView? = null
+    private var requests: TextView? = null
     private var inboxAdapter: InboxAdapter? = null
     private var inboxList: ArrayList<Inbox>? = null
     private var firebaseUser: FirebaseUser? = null
@@ -30,6 +33,7 @@ class InboxActivity : AppCompatActivity() {
         firebaseUser = FirebaseAuth.getInstance().currentUser
 
         recyclerViewInbox = findViewById(R.id.recyclerViewInbox)
+        requests = findViewById(R.id.requestsTextInboxItem)
         inboxList = ArrayList()
         inboxAdapter = InboxAdapter(this, inboxList!!)
         recyclerViewInbox?.setHasFixedSize(true)
@@ -37,6 +41,10 @@ class InboxActivity : AppCompatActivity() {
         recyclerViewInbox?.adapter = inboxAdapter
 
         getChats()
+
+        requests?.setOnClickListener {
+            Toast.makeText(this, "Requests not yet implemented buddy!\nWorking on it.\nSorry :(", Toast.LENGTH_SHORT).show()
+        }
 
     }
 

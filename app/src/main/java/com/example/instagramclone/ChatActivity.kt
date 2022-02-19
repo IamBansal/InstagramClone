@@ -1,11 +1,11 @@
 package com.example.instagramclone
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagramclone.adapter.MessageAdapter
@@ -33,6 +33,14 @@ class ChatActivity : AppCompatActivity() {
 
         val toUserId = intent.getStringExtra("toUserId")
         getToolbar(toUserId.toString())
+
+//        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbarChat)
+//        toolbar.setOnClickListener {
+//            getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit()
+//                .putString("profileID", toUserId).apply()
+//            supportFragmentManager.beginTransaction()
+//                .replace(R.id.fragment_container, ProfileUserFragment()).commit()
+//        }
 
         recyclerViewChats = findViewById(R.id.recyclerViewChat)
         messageEt = findViewById(R.id.etMessage)
