@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.instagramclone.InboxActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.StoryPostActivity
 import com.example.instagramclone.adapter.PostAdapter
@@ -142,6 +143,7 @@ class HomeFragment : Fragment() {
         }
 
         inbox?.setOnClickListener {
+            startActivity(Intent(context, InboxActivity::class.java))
             Toast.makeText(context, "Inbox not yet implemented buddy!\nWorking on it :)", Toast.LENGTH_SHORT).show()
         }
 

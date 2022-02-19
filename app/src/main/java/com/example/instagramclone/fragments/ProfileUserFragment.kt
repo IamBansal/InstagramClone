@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,6 +63,7 @@ class ProfileUserFragment : Fragment() {
     private var options : ImageView? = null
     private var myPictures : ImageButton? = null
     private var savedPictures : ImageButton? = null
+    private var message : ImageButton? = null
     private var editProfile : Button? = null
     private var recyclerViewMyPictures : RecyclerView? = null
     private var photoAdapter : PhotoAdapter? = null
@@ -100,6 +102,7 @@ class ProfileUserFragment : Fragment() {
         options = layout.findViewById(R.id.optionsProfile)
         myPictures = layout.findViewById(R.id.ibMyPics)
         savedPictures = layout.findViewById(R.id.ibSaved)
+        message = layout.findViewById(R.id.btnMessageProfile)
         editProfile = layout.findViewById(R.id.btnEditProfile)
         recyclerViewMyPictures = layout.findViewById(R.id.recyclerviewMyPics)
         recyclerViewSavedPics = layout.findViewById(R.id.recyclerviewSaved)
@@ -133,8 +136,17 @@ class ProfileUserFragment : Fragment() {
 
         if (profileId.equals(firebaseUser?.uid)) {
             editProfile?.text = "Edit Profile"
+            message?.visibility = View.GONE
         } else {
+            message?.visibility = View.VISIBLE
             checkFollowingStatus()
+        }
+
+        message?.setOnClickListener {
+            val map = HashMap<String, Any>()
+            map["toUserId"] = profileId.toString()
+            FirebaseDatabase.getInstance().reference.child("Chats").child(firebaseUser!!.uid).child(profileId!!).setValue(map)
+            startActivity(Intent(context, InboxActivity::class.java))
         }
 
         //To view story from profile

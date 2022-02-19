@@ -184,12 +184,17 @@
                 android:text="#kingsclan"
                 android:textSize="15sp" />
 
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
             <Button
                 android:id="@+id/btnEditProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
+                android:layout_toStartOf="@id/btnMessageProfile"
                 android:layout_marginEnd="10dp"
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/amiko_semibold"
@@ -197,6 +202,21 @@
                 android:text="Edit Profile"
                 android:textAllCaps="false"
                 android:textColor="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/btnMessageProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="@color/white"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="10dp"
+                    android:paddingEnd="10dp"
+                    android:src="@drawable/message" />
+
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewHighlightUser"
