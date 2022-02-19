@@ -145,6 +145,8 @@ class ProfileUserFragment : Fragment() {
         message?.setOnClickListener {
             val map = HashMap<String, Any>()
             map["toUserId"] = profileId.toString()
+            map["byUserId"] = ""
+            map["textMessage"] = ""
             FirebaseDatabase.getInstance().reference.child("Chats").child(firebaseUser!!.uid).child(profileId!!).setValue(map)
             startActivity(Intent(context, InboxActivity::class.java))
         }

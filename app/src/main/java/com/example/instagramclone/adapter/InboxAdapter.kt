@@ -1,5 +1,6 @@
 package com.example.instagramclone.adapter
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import com.example.instagramclone.ChatActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.model.Inbox
 import com.example.instagramclone.model.User
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -32,11 +34,26 @@ class InboxAdapter(private var context: Context, private var inbox : ArrayList<I
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val inboxChat = inbox[position]
         getToUser(holder.profileInbox, holder.usernameInbox, inboxChat.toUserId.toString())
+
         holder.itemView.setOnClickListener {
             val intent = Intent(context, ChatActivity::class.java)
             intent.putExtra("toUserId", inboxChat.toUserId.toString())
             context.startActivity(intent)
         }
+
+        holder.itemView.setOnLongClickListener {
+        val alert = AlertDialog.Builder(context)
+        alert.setTitle("Delete Chat Requested!!")
+            .setMessage("You sure you want to delete chats with the user?\nIt will delete the chats for the user too.")
+            .setPositiveButton("Yes, Delete!!"){_,_->
+                FirebaseDatabase.getInstance().reference.child("Chats").child(FirebaseAuth.getInstance().currentUser!!.uid).child(inboxChat.toUserId!!).removeValue()
+            }
+            .setNegativeButton("No"){_,_->}
+            .create()
+            .show()
+            return@setOnLongClickListener true
+        }
+
     }
 
     private fun getToUser(profile :CircleImageView, username: TextView, toUserId: String) {
