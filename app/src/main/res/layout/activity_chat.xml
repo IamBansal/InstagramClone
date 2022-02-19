@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChatActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarChat"
+        android:background="?android:attr/windowBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewChat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5sp"
+        android:layout_above="@id/etMessage"
+        android:layout_below="@id/toolbarChat" />
+
+    <EditText
+        android:id="@+id/etMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="15sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginEnd="5sp"
+        android:layout_marginBottom="20sp"
+        android:layout_toStartOf="@id/sendMsg"
+        android:hint="Send Message" />
+
+    <TextView
+        android:id="@+id/sendMsg"
+        android:textSize="15sp"
+        android:textColor="@color/lightBlue"
+        android:layout_marginEnd="10sp"
+        android:layout_marginStart="10sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="30sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:text="Send" />
+
+</RelativeLayout>

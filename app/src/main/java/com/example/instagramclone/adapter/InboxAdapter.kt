@@ -1,11 +1,13 @@
 package com.example.instagramclone.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.instagramclone.ChatActivity
 import com.example.instagramclone.R
 import com.example.instagramclone.model.Inbox
 import com.example.instagramclone.model.User
@@ -30,6 +32,11 @@ class InboxAdapter(private var context: Context, private var inbox : ArrayList<I
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val inboxChat = inbox[position]
         getToUser(holder.profileInbox, holder.usernameInbox, inboxChat.toUserId.toString())
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, ChatActivity::class.java)
+            intent.putExtra("toUserId", inboxChat.toUserId.toString())
+            context.startActivity(intent)
+        }
     }
 
     private fun getToUser(profile :CircleImageView, username: TextView, toUserId: String) {

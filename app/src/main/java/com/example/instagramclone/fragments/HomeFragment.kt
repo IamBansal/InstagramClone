@@ -144,7 +144,6 @@ class HomeFragment : Fragment() {
 
         inbox?.setOnClickListener {
             startActivity(Intent(context, InboxActivity::class.java))
-            Toast.makeText(context, "Inbox not yet implemented buddy!\nWorking on it :)", Toast.LENGTH_SHORT).show()
         }
 
         return layout
