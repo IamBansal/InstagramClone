@@ -46,6 +46,7 @@
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/ic_liked.xml" value="0.2484375" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/drawable/unlike.xml" value="0.2484375" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_add_highlight.xml" value="0.14671052631578949" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_chat.xml" value="0.14671052631578949" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_comment.xml" value="0.14671052631578949" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_edit_profile.xml" value="0.21822916666666667" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/activity_followers.xml" value="0.23229166666666667" />
@@ -69,6 +70,7 @@
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/fragment_search.xml" value="0.14671052631578949" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/highlight_show_item.xml" value="0.14671052631578949" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/inbox_item.xml" value="0.14671052631578949" />
+        <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/message_item.xml" value="0.14671052631578949" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/notification_item.xml" value="0.14671052631578949" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/photo_item.xml" value="0.14527687296416938" />
         <entry key="..\:/Users/abans/AndroidStudioProjects/InstagramCloneB/app/src/main/res/layout/post_item.xml" value="0.14671052631578949" />
