@@ -181,6 +181,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:textColor="@color/black"
+                android:tag="bio"
                 android:layout_marginTop="5dp"
                 android:text="#kingsclan"
                 android:textSize="15sp" />
