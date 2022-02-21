@@ -73,9 +73,11 @@ class ChatActivity : AppCompatActivity() {
                 FirebaseDatabase.getInstance().reference.child("Chats").child(toUserId)
                     .child(firebaseUser!!.uid).addValueEventListener(object :ValueEventListener{
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            val message : Inbox? = snapshot.getValue(Inbox::class.java)
-                            msgList?.add(message!!)
-                            messageAdapter?.notifyDataSetChanged()
+                            if (snapshot.exists()) {
+                                val message: Inbox? = snapshot.getValue(Inbox::class.java)
+                                msgList?.add(message!!)
+                                messageAdapter?.notifyDataSetChanged()
+                            }
                         }
                         override fun onCancelled(error: DatabaseError) {
                             TODO("Not yet implemented")
