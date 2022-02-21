@@ -36,10 +36,16 @@ class MessageAdapter(private var context: Context, private var message : ArrayLi
         FirebaseDatabase.getInstance().reference.child("Users").child(byUserId).addValueEventListener(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user : User? = snapshot.getValue(User::class.java)
-                if (byUserId == FirebaseAuth.getInstance().currentUser!!.uid){
-                    sentByText.text = "by you"
-                } else {
-                    sentByText.text = "by ${user?.Username}"
+                when (byUserId) {
+                    FirebaseAuth.getInstance().currentUser!!.uid -> {
+                        sentByText.text = "by you"
+                    }
+                    "" -> {
+                        sentByText.text = ""
+                    }
+                    else -> {
+                        sentByText.text = "by ${user?.Username}"
+                    }
                 }
             }
             override fun onCancelled(error: DatabaseError) {
