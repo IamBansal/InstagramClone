@@ -1,5 +1,6 @@
 package com.example.instagramclone
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.EditText
@@ -65,6 +66,7 @@ class ChatActivity : AppCompatActivity() {
     private fun readMessage(toUserId: String) {
         FirebaseDatabase.getInstance().reference.child("Chats").child(firebaseUser!!.uid)
             .child(toUserId).addValueEventListener(object :ValueEventListener{
+            @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
                 msgList?.clear()
                 val msg : Inbox? = snapshot.getValue(Inbox::class.java)

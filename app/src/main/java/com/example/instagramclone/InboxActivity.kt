@@ -1,5 +1,6 @@
 package com.example.instagramclone
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
@@ -50,6 +51,7 @@ class InboxActivity : AppCompatActivity() {
 
     private fun getChats() {
         FirebaseDatabase.getInstance().reference.child("Chats").child(firebaseUser!!.uid).addValueEventListener(object :ValueEventListener{
+            @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
                 inboxList?.clear()
                 for (snaps in snapshot.children){
