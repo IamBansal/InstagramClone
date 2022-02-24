@@ -5,12 +5,17 @@
     android:padding="5dp"
     android:layout_height="wrap_content">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileMsg"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+
     <TextView
+        android:layout_toEndOf="@id/profileMsg"
         android:id="@+id/messageChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5sp"
-        android:layout_marginStart="5sp"
+        android:layout_marginStart="12sp"
         android:layout_marginTop="5sp"
         android:layout_marginEnd="5sp"
         android:layout_marginBottom="5sp"
@@ -23,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/messageChat"
-        android:layout_marginStart="15sp"
+        android:layout_marginStart="40sp"
         android:layout_marginTop="5sp"
         android:layout_marginEnd="5sp"
         android:layout_marginBottom="5sp"
