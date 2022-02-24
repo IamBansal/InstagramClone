@@ -75,6 +75,17 @@
             android:textColor="@color/blue"
             android:textSize="18sp"
             android:text="Change Profile Photo"
+            android:layout_marginBottom="10sp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tvRemovePhoto"
+            android:layout_marginTop="5sp"
+            android:textColor="@color/blue"
+            android:textSize="18sp"
+            android:text="Remove Profile Photo"
             android:layout_marginBottom="30sp"
             android:layout_gravity="center"
             android:layout_width="wrap_content"

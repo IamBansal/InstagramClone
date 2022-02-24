@@ -1,5 +1,6 @@
 package com.example.instagramclone
 
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
@@ -31,6 +32,7 @@ class EditProfileActivity : AppCompatActivity() {
     private var save : ImageView? = null
     private var imageProfile : CircleImageView? = null
     private var changeProfile : TextView? = null
+    private var removeProfile : TextView? = null
     private var username : TextInputEditText? = null
     private var fullName : TextInputEditText? = null
     private var bio : TextInputEditText? = null
@@ -47,6 +49,7 @@ class EditProfileActivity : AppCompatActivity() {
         save = findViewById(R.id.ivSaveProfile)
         imageProfile = findViewById(R.id.civProfileImage)
         changeProfile = findViewById(R.id.tvChangePhoto)
+        removeProfile = findViewById(R.id.tvRemovePhoto)
         username = findViewById(R.id.etUsernameEProfile)
         fullName = findViewById(R.id.etEFullName)
         bio = findViewById(R.id.etEBio)
@@ -77,6 +80,27 @@ class EditProfileActivity : AppCompatActivity() {
 
         changeProfile?.setOnClickListener {
             CropImage.activity().setCropShape(CropImageView.CropShape.RECTANGLE).start(this)
+        }
+
+        removeProfile?.setOnClickListener {
+            val alert = AlertDialog.Builder(this)
+            alert.setTitle("Remove Profile Requested!!")
+                .setMessage("You sure you want to remove your profile photo?\nYou can again change your profile photo anytime again.")
+                .setPositiveButton("Remove!"){_,_->
+                    val map = HashMap<String, Any>()
+                    map["imageUrl"] = "default"
+                    FirebaseDatabase.getInstance().reference.child("Users").child(FirebaseAuth.getInstance().currentUser!!.uid)
+                        .updateChildren(map).addOnCompleteListener { task ->
+                            if (task.isSuccessful){
+                                Toast.makeText(this, "Profile photo removed.", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                }
+                .setNegativeButton("No"){_,_->}
+                .create()
+                .show()
         }
 
         imageProfile?.setOnClickListener {
